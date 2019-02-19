@@ -3,4 +3,4 @@ osx_image: xcode10.1
 
 xcode_workspace: Workflows.xcworkspace
 xcode_scheme: Workflows
-xcode_destination: platform=iOS Simulator,OS=10.1,name=iPad Pro (9.7-inch)
+xcode_destination: platform=iOS Simulator,OS=12.1,name=iPad Pro (12.9-inch) (3rd generation)
