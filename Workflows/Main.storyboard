@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14460.31" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14460.20"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <scenes>
+        <!--Test Controller-->
+        <scene sceneID="tne-QT-ifu">
+            <objects>
+                <viewController id="BYZ-38-t0r" customClass="TestController" customModule="Workflows" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="YCk-6X-IYo">
+                                <rect key="frame" x="67.5" y="20" width="240" height="128"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="128" id="WQ1-8S-USi"/>
+                                    <constraint firstAttribute="width" constant="240" id="vr7-Od-yJu"/>
+                                </constraints>
+                            </imageView>
+                            <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="xAj-bZ-Hsz">
+                                <rect key="frame" x="177.5" y="74" width="20" height="20"/>
+                            </activityIndicatorView>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="843-yY-e3H">
+                                <rect key="frame" x="166.5" y="156" width="42" height="20.5"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="J4G-qb-G58">
+                                <rect key="frame" x="8" y="184.5" width="359" height="30"/>
+                                <nil key="textColor"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <textInputTraits key="textInputTraits"/>
+                                <connections>
+                                    <outlet property="delegate" destination="BYZ-38-t0r" id="Ell-am-IB4"/>
+                                </connections>
+                            </textField>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="o88-4p-Ci1">
+                                <rect key="frame" x="126" y="222.5" width="123" height="30"/>
+                                <subviews>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="9R5-7S-xsg">
+                                        <rect key="frame" x="0.0" y="0.0" width="52" height="30"/>
+                                        <state key="normal" title="Button1"/>
+                                        <state key="disabled" title="Disabled"/>
+                                        <connections>
+                                            <action selector="onButton1Pressed" destination="BYZ-38-t0r" eventType="touchUpInside" id="2FP-mj-zNL"/>
+                                        </connections>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="u2u-tz-6r7">
+                                        <rect key="frame" x="68" y="0.0" width="55" height="30"/>
+                                        <state key="normal" title="Button2"/>
+                                        <connections>
+                                            <action selector="onButton2Pressed" destination="BYZ-38-t0r" eventType="touchUpInside" id="PJF-34-3C1"/>
+                                        </connections>
+                                    </button>
+                                </subviews>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <constraints>
+                                    <constraint firstAttribute="trailing" secondItem="u2u-tz-6r7" secondAttribute="trailing" id="HPs-LL-ONl"/>
+                                    <constraint firstAttribute="bottom" secondItem="u2u-tz-6r7" secondAttribute="bottom" id="KmT-tT-omw"/>
+                                    <constraint firstItem="u2u-tz-6r7" firstAttribute="leading" secondItem="9R5-7S-xsg" secondAttribute="trailing" constant="16" id="VzS-LT-rJY"/>
+                                    <constraint firstItem="u2u-tz-6r7" firstAttribute="top" secondItem="o88-4p-Ci1" secondAttribute="top" id="k0p-MZ-AlO"/>
+                                    <constraint firstItem="9R5-7S-xsg" firstAttribute="leading" secondItem="o88-4p-Ci1" secondAttribute="leading" id="lcV-PO-CYB"/>
+                                    <constraint firstItem="9R5-7S-xsg" firstAttribute="top" secondItem="o88-4p-Ci1" secondAttribute="top" id="lje-Rd-1z9"/>
+                                </constraints>
+                            </view>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="hgC-gL-t3v" userLabel="Cancel load">
+                                <rect key="frame" x="124" y="311" width="126" height="44"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <state key="normal" title="Cancel image load"/>
+                                <connections>
+                                    <action selector="cancelImageLoad" destination="BYZ-38-t0r" eventType="touchUpInside" id="vsP-Gy-Qv1"/>
+                                </connections>
+                            </button>
+                        </subviews>
+                        <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <constraints>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="J4G-qb-G58" secondAttribute="trailing" constant="8" id="082-bV-mLG"/>
+                            <constraint firstItem="843-yY-e3H" firstAttribute="centerX" secondItem="YCk-6X-IYo" secondAttribute="centerX" id="4Hd-k5-bvh"/>
+                            <constraint firstItem="xAj-bZ-Hsz" firstAttribute="centerY" secondItem="YCk-6X-IYo" secondAttribute="centerY" id="5qL-2P-azK"/>
+                            <constraint firstItem="YCk-6X-IYo" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="8Lk-om-qpu"/>
+                            <constraint firstItem="o88-4p-Ci1" firstAttribute="centerX" secondItem="843-yY-e3H" secondAttribute="centerX" id="Me5-Qo-Edc"/>
+                            <constraint firstItem="J4G-qb-G58" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="8" id="XwS-80-Scg"/>
+                            <constraint firstItem="843-yY-e3H" firstAttribute="top" secondItem="YCk-6X-IYo" secondAttribute="bottom" constant="8" id="e6v-Vd-xRf"/>
+                            <constraint firstItem="YCk-6X-IYo" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" id="lzc-AT-uQx"/>
+                            <constraint firstItem="o88-4p-Ci1" firstAttribute="top" secondItem="J4G-qb-G58" secondAttribute="bottom" constant="8" id="nT4-Rh-aku"/>
+                            <constraint firstItem="J4G-qb-G58" firstAttribute="centerX" secondItem="843-yY-e3H" secondAttribute="centerX" id="quI-jF-vQF"/>
+                            <constraint firstItem="xAj-bZ-Hsz" firstAttribute="centerX" secondItem="YCk-6X-IYo" secondAttribute="centerX" id="sIE-Cn-GaA"/>
+                            <constraint firstItem="J4G-qb-G58" firstAttribute="top" secondItem="843-yY-e3H" secondAttribute="bottom" constant="8" id="smR-D4-4bz"/>
+                            <constraint firstItem="o88-4p-Ci1" firstAttribute="centerX" secondItem="J4G-qb-G58" secondAttribute="centerX" id="vG0-2R-rTs"/>
+                        </constraints>
+                        <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
+                    </view>
+                    <connections>
+                        <outlet property="button1" destination="9R5-7S-xsg" id="qfd-1x-XWi"/>
+                        <outlet property="button2" destination="u2u-tz-6r7" id="MeI-9T-HOE"/>
+                        <outlet property="cancelButon" destination="hgC-gL-t3v" id="l1a-wD-YQp"/>
+                        <outlet property="imageLoader" destination="xAj-bZ-Hsz" id="C4Q-t3-rBh"/>
+                        <outlet property="imageView" destination="YCk-6X-IYo" id="oOn-eF-UEA"/>
+                        <outlet property="label" destination="843-yY-e3H" id="eZt-My-J8g"/>
+                        <outlet property="textField" destination="J4G-qb-G58" id="aA6-Hq-shH"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="140" y="133.5832083958021"/>
+        </scene>
+    </scenes>
+</document>

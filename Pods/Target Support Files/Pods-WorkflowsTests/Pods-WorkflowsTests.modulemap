@@ -1,0 +1,6 @@
+framework module Pods_WorkflowsTests {
+  umbrella header "Pods-WorkflowsTests-umbrella.h"
+
+  export *
+  module * { export * }
+}

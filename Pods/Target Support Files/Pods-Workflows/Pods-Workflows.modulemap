@@ -1,0 +1,6 @@
+framework module Pods_Workflows {
+  umbrella header "Pods-Workflows-umbrella.h"
+
+  export *
+  module * { export * }
+}
