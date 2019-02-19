@@ -2,7 +2,7 @@ import Foundation
 import ReactiveSwift
 import Result
 
-class MyViewModel: BaseReactor<MyViewModel.Event, MyViewModel.ViewState, ()> {
+class MyViewModel: ReactorCore<MyViewModel.Event, MyViewModel.ViewState, ()> {
     struct ViewState {
         let leftButton: WorkflowHandle<NetworkedButton>
         let rightButton: WorkflowHandle<NetworkedButton>

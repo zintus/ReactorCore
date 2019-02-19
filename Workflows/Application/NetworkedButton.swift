@@ -2,7 +2,7 @@ import Foundation
 import ReactiveSwift
 import Result
 
-class NetworkedButton: BaseReactor<NetworkedButton.Event, NetworkedButton.State, Never> {
+class NetworkedButton: ReactorCore<NetworkedButton.Event, NetworkedButton.State, Never> {
     enum State {
         case initial
         case loading

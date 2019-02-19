@@ -15,7 +15,7 @@ protocol Reactor: class, Workflow, SingleLike {
 
 private let reactorLogLock = Atomic(())
 
-class BaseReactor<E, S, R>: Reactor {
+class ReactorCore<E, S, R>: Reactor {
     typealias Event = E
     typealias State = S
     typealias Value = R

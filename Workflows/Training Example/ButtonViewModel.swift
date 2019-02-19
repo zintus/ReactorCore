@@ -2,7 +2,7 @@ import Foundation
 import ReactiveSwift
 import Result
 
-class ButtonViewModel: BaseReactor<ButtonViewModel.Event, ButtonViewModel.ViewState, Never> {
+class ButtonViewModel: ReactorCore<ButtonViewModel.Event, ButtonViewModel.ViewState, Never> {
     enum Event {
         case changeURL(String)
         case imageIsLoading(Bool)

@@ -23,10 +23,11 @@
 		D62AA6859A21419F6DBEE1E8 /* ButtonViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D62AA2A899D279622390DD70 /* ButtonViewModel.swift */; };
 		D62AA7B26C9F568C4A29EDBE /* TrainingViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D62AA2D88B7380DE96C3F675 /* TrainingViewModel.swift */; };
 		D62AA887DF4608E267D2BF3D /* ReadonlyWorkflow.swift in Sources */ = {isa = PBXBuildFile; fileRef = D62AAAE941D7B10B17BCE327 /* ReadonlyWorkflow.swift */; };
+		D62AAB3E8E66501CF313D856 /* ReactorCoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D62AA1EE16B7C9533C746A2E /* ReactorCoreTests.swift */; };
 		D62AAB7AA8F4A0528212A2EF /* Workflow.swift in Sources */ = {isa = PBXBuildFile; fileRef = D62AA7863B9DE5368A733B19 /* Workflow.swift */; };
 		D62AAC4403F985B17D4AA1CC /* SingleLike.swift in Sources */ = {isa = PBXBuildFile; fileRef = D62AAC533E980DA3100601E8 /* SingleLike.swift */; };
 		D62AAC8AD39ED530FBDC5BB0 /* ImageViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D62AAFFC5287DF5D474EA3AE /* ImageViewModel.swift */; };
-		D62AAE643F317B1820C3A8BB /* Reactor.swift in Sources */ = {isa = PBXBuildFile; fileRef = D62AA71CBF3A05530290CC08 /* Reactor.swift */; };
+		D62AAE643F317B1820C3A8BB /* ReactorCore.swift in Sources */ = {isa = PBXBuildFile; fileRef = D62AA71CBF3A05530290CC08 /* ReactorCore.swift */; };
 		D62AAE90311DB0CBBBD194B3 /* NetworkedButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = D62AA43C1AE332B5CC8049F5 /* NetworkedButton.swift */; };
 		D62AAEE8F59A41339E3CCBF6 /* TestController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D62AA6762BEFBB98DCDB6C8B /* TestController.swift */; };
 		D62AAF08E9E8DC52A096AD9B /* FareModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D62AAF0DAAF5B54D54B6E0A7 /* FareModel.swift */; };
@@ -63,12 +64,13 @@
 		C0D133FB2211D689007AB332 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		C0D134012211DD58007AB332 /* Lock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Lock.swift; sourceTree = "<group>"; };
 		D22696CEB300EE2F4E15C61D /* Pods-Workflows.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Workflows.release.xcconfig"; path = "Pods/Target Support Files/Pods-Workflows/Pods-Workflows.release.xcconfig"; sourceTree = "<group>"; };
+		D62AA1EE16B7C9533C746A2E /* ReactorCoreTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ReactorCoreTests.swift; sourceTree = "<group>"; };
 		D62AA2A899D279622390DD70 /* ButtonViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ButtonViewModel.swift; sourceTree = "<group>"; };
 		D62AA2D88B7380DE96C3F675 /* TrainingViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TrainingViewModel.swift; sourceTree = "<group>"; };
 		D62AA43C1AE332B5CC8049F5 /* NetworkedButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NetworkedButton.swift; sourceTree = "<group>"; };
 		D62AA542C858FC6B2AA1F049 /* Single.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Single.swift; sourceTree = "<group>"; };
 		D62AA6762BEFBB98DCDB6C8B /* TestController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TestController.swift; sourceTree = "<group>"; };
-		D62AA71CBF3A05530290CC08 /* Reactor.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Reactor.swift; sourceTree = "<group>"; };
+		D62AA71CBF3A05530290CC08 /* ReactorCore.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ReactorCore.swift; sourceTree = "<group>"; };
 		D62AA7863B9DE5368A733B19 /* Workflow.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Workflow.swift; sourceTree = "<group>"; };
 		D62AAAAEA2C319F75755C54D /* MyViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MyViewModel.swift; sourceTree = "<group>"; };
 		D62AAAE941D7B10B17BCE327 /* ReadonlyWorkflow.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ReadonlyWorkflow.swift; sourceTree = "<group>"; };
@@ -163,6 +165,7 @@
 			children = (
 				C0D133F92211D689007AB332 /* ValueQueueTests.swift */,
 				C0D133FB2211D689007AB332 /* Info.plist */,
+				D62AA1EE16B7C9533C746A2E /* ReactorCoreTests.swift */,
 			);
 			path = WorkflowsTests;
 			sourceTree = "<group>";
@@ -172,7 +175,7 @@
 			children = (
 				D62AA542C858FC6B2AA1F049 /* Single.swift */,
 				D62AA7863B9DE5368A733B19 /* Workflow.swift */,
-				D62AA71CBF3A05530290CC08 /* Reactor.swift */,
+				D62AA71CBF3A05530290CC08 /* ReactorCore.swift */,
 				D62AAAE941D7B10B17BCE327 /* ReadonlyWorkflow.swift */,
 				D62AAC533E980DA3100601E8 /* SingleLike.swift */,
 				D62AAC284B8905FB110E2112 /* Reaction.swift */,
@@ -383,7 +386,7 @@
 				C07A1923220454CD00AFE6E7 /* AppDelegate.swift in Sources */,
 				D62AA1C17A0E5EBFD22BF802 /* Single.swift in Sources */,
 				D62AAB7AA8F4A0528212A2EF /* Workflow.swift in Sources */,
-				D62AAE643F317B1820C3A8BB /* Reactor.swift in Sources */,
+				D62AAE643F317B1820C3A8BB /* ReactorCore.swift in Sources */,
 				D62AAE90311DB0CBBBD194B3 /* NetworkedButton.swift in Sources */,
 				D62AA887DF4608E267D2BF3D /* ReadonlyWorkflow.swift in Sources */,
 				D62AAC4403F985B17D4AA1CC /* SingleLike.swift in Sources */,
@@ -403,6 +406,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				C0D133FA2211D689007AB332 /* ValueQueueTests.swift in Sources */,
+				D62AAB3E8E66501CF313D856 /* ReactorCoreTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

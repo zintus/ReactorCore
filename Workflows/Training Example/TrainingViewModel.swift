@@ -2,7 +2,7 @@ import ReactiveSwift
 import Result
 import UIKit
 
-class TrainingViewModel: BaseReactor<TrainingViewModel.Event, TrainingViewModel.OverallState, Never> {
+class TrainingViewModel: ReactorCore<TrainingViewModel.Event, TrainingViewModel.OverallState, Never> {
     enum Event {
         case loadImage(String)
         case textInput(String)

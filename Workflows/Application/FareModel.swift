@@ -5,7 +5,7 @@ import Result
 typealias Fare = Int
 
 // Polls fares with certain interval
-class FareModel: BaseReactor<FareModel.Event, FareModel.State, Never> {
+class FareModel: ReactorCore<FareModel.Event, FareModel.State, Never> {
     enum State {
         case loading
         case loaded(fare: Fare)
