@@ -1,5 +1,6 @@
-# Uncomment the next line to define a global platform for your project
-# platform :ios, '9.0'
+platform :ios, '9.0'
+
+inhibit_all_warnings!
 
 target 'Workflows' do
   use_frameworks!
@@ -8,13 +9,8 @@ target 'Workflows' do
   pod 'ReactiveCocoa'
 
   pod 'SwiftFormat/CLI'
-end
 
-target 'WorkflowsTests' do
-    use_frameworks!
-    
-    pod 'ReactiveSwift'
-    pod 'ReactiveCocoa'
-    
-    pod 'SwiftFormat/CLI'
+  target 'WorkflowsTests' do
+      inherit! :search_paths
+  end
 end
