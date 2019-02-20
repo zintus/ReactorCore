@@ -29,7 +29,7 @@ class TrainingViewModel: ReactorCore<TrainingViewModel.Event, TrainingViewModel.
         var buttonState: ButtonViewModel.State {
             return button1State.state.unwrapped.withCounter(counter)
         }
-        
+
         static func makeInitial() -> OverallState {
             return OverallState(counter: 0,
                                 imageLoader: nil,
@@ -87,8 +87,7 @@ class TrainingViewModel: ReactorCore<TrainingViewModel.Event, TrainingViewModel.
     // Если прийдёт ивент, то ... (1)
     // или если обновится состояние загрузчика картинок, то ... (2)
     // или если обновится состояние кнопки, то ... (3)
-    
-    
+
     // (1)/(2)
     // (2)/(1)
 
@@ -138,7 +137,7 @@ class TrainingViewModel: ReactorCore<TrainingViewModel.Event, TrainingViewModel.
 
             // (3)
             when.workflowUpdated(state.button1State) { handle in
-                return .enterState(state.withButton(handle))
+                .enterState(state.withButton(handle))
             }
         }
     }

@@ -130,7 +130,7 @@ class WorkflowHandle<W: Workflow>: WorkflowInput {
     fileprivate func toNextState() -> ValueQueue<W.CompleteState>.NextValue {
         return stateTracker.firstState()
     }
-    
+
     func withState(_ state: W.CompleteState) -> WorkflowHandle<W> {
         return WorkflowHandle(workflow: workflow, stateTracker: stateTracker, state: state)
     }

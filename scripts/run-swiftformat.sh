@@ -8,4 +8,7 @@ export SRCROOT=../Workflows
 
 ./swiftformat.sh
 
+export SRCROOT=../WorkflowsTests
+./swiftformat.sh
+
 cd -

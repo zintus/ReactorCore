@@ -136,58 +136,58 @@ class ValueQueue<Value> {
             state.lockedFirstEntry = true
         }
     }
-    
+
     class NextValue {
         typealias Observer = SignalProducer<Value, NoError>.ProducedSignal.Observer
         private weak var queue: ValueQueue<Value>?
         private let observer: Observer
         let value: Property<Value?>
-        
+
         func consume() {
             DispatchQueue.global().async {
                 self.queue?.consume(self.observer)
             }
         }
-        
+
         func cancel() {
             DispatchQueue.global().async {
                 self.queue?.cancel(self.observer)
             }
         }
-        
+
         init(property: Property<Value?>, observer: Observer, queue: ValueQueue<Value>) {
-            self.value = property
+            value = property
             self.queue = queue
             self.observer = observer
         }
     }
-    
+
     private func consume(_ observer: SignalProducer<Value, NoError>.ProducedSignal.Observer) {
-        self.state.modify { (state: inout State) in
+        state.modify { (state: inout State) in
             guard let index = state.waiters.firstIndex(where: { $0.observer === observer }) else {
                 return
             }
-            
+
             if index == 0 {
                 if state.lockedFirstEntry {
                     state.values.remove(at: 0)
                     state.lockedFirstEntry = false
                     state.waiters.remove(at: 0)
                 }
-                
+
                 self.lockFirstEvent(state: &state)
             } else {
                 fatalError("Trying to consume without sending an event!")
             }
         }
     }
-    
+
     private func cancel(_ observer: SignalProducer<Value, NoError>.ProducedSignal.Observer) {
-        self.state.modify { (state: inout State) in
+        state.modify { (state: inout State) in
             guard let index = state.waiters.firstIndex(where: { $0.observer === observer }) else {
                 return
             }
-            
+
             state.waiters.remove(at: index)
             if index == 0 {
                 state.lockedFirstEntry = false
@@ -198,17 +198,17 @@ class ValueQueue<Value> {
 
     func nextValue() -> NextValue {
         var currentObserver: SignalProducer<Value, NoError>.ProducedSignal.Observer?
-        
+
         let producer = SignalProducer<Value, NoError> { observer, lifetime in
             currentObserver = observer
-            
+
             self.state.modify { (state: inout State) in
                 state.waiters.append((observer, lifetime))
 
                 self.lockFirstEvent(state: &state)
             }
         }
-        
+
         return NextValue(property: Property(initial: nil, then: producer),
                          observer: currentObserver!,
                          queue: self)
