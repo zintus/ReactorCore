@@ -13,8 +13,6 @@ protocol Reactor: class, Workflow, SingleLike {
                             _ mapper: @escaping (Event) -> StateTransition<State, Value>?) -> Reaction<State, Value>
 }
 
-private let reactorLogLock = Atomic(())
-
 class ReactorCore<E, S, R>: Reactor {
     typealias Event = E
     typealias State = S
@@ -68,41 +66,20 @@ class ReactorCore<E, S, R>: Reactor {
                 return .empty
 
             case let .running(current):
-                var usedEvent: E?
-                
+
                 let nextValue = eventSource.nextValue()
-                let eventWithLogs = nextValue.value.producer
+                let eventWithConsumation = nextValue.value.producer
                     .skipNil()
                     .on(interrupted: {
                         nextValue.cancel()
                     }, value: { _ in
                         nextValue.consume()
                     })
-                    .on(value: { consumedEvent in
-                        usedEvent = consumedEvent
-                    })
 
-                return self.react(to: current, eventSource: eventWithLogs)
+                return self.react(to: current, eventSource: eventWithConsumation)
                     .signalProducer
-                    .logEvents(identifier: "continueStateStream \(type(of: self))")
                     .take(first: 1) // This is crucial
-                    .map { [weak self] transition in
-                        guard let self = self else { return transition.nextState }
-
-                        if Debug.printStateTransitions {
-                            // Lazy and want to keep logs consistent
-                            reactorLogLock.modify { _ in
-                                print("\(self)------------")
-                                print("from: \(prev)")
-                                if let usedEvent = usedEvent {
-                                    print("+ \(usedEvent)")
-                                }
-                                print("to: \(transition.nextState)")
-                                print("------------")
-                            }
-                        }
-                        return transition.nextState
-                    }
+                    .map { $0.nextState }
             }
         }
 
@@ -157,9 +134,6 @@ class ValueQueue<Value> {
             waiter.observer.send(value: first)
 
             state.lockedFirstEntry = true
-            print("locked waiter length \(state.waiters.count)")
-
-            print(ObjectIdentifier(waiter.observer))
         }
     }
     
@@ -199,7 +173,6 @@ class ValueQueue<Value> {
                     state.values.remove(at: 0)
                     state.lockedFirstEntry = false
                     state.waiters.remove(at: 0)
-                    print("unlocked waiter length \(state.waiters.count)")
                 }
                 
                 self.lockFirstEvent(state: &state)
@@ -230,10 +203,8 @@ class ValueQueue<Value> {
             currentObserver = observer
             
             self.state.modify { (state: inout State) in
-                print("await")
                 state.waiters.append((observer, lifetime))
-                print(state)
-                
+
                 self.lockFirstEvent(state: &state)
             }
         }
@@ -245,7 +216,6 @@ class ValueQueue<Value> {
 
     func enqueue(_ value: Value) {
         state.modify { (state: inout State) in
-            print("append")
             state.values.append(value)
 
             lockFirstEvent(state: &state)
@@ -261,8 +231,4 @@ private extension StateTransition {
         case let .finishWith(value): return .finished(value)
         }
     }
-}
-
-private struct Debug {
-    static let printStateTransitions = true
 }

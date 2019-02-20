@@ -26,7 +26,6 @@ class ReactionBuilder<State, Value> {
             nextState.value.producer
                 .skipNil()
                 .observe(on: scheduler)
-                .logEvents(identifier: "workflowUpdated")
                 .on(interrupted: {
                     nextState.cancel()
                 }, value: { _ in
