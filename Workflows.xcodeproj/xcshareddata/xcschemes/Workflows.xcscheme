@@ -36,6 +36,11 @@
                BlueprintName = "WorkflowsTests"
                ReferencedContainer = "container:Workflows.xcodeproj">
             </BuildableReference>
+            <SkippedTests>
+               <Test
+                  Identifier = "RegisterTests">
+               </Test>
+            </SkippedTests>
          </TestableReference>
       </Testables>
       <MacroExpansion>
