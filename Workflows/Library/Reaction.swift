@@ -8,38 +8,60 @@ enum StateTransition<State, Value> {
     case finishWith(Value)
 }
 
-// FIXME: First one who have their event sent to mapper wins race, and cancel everyone else
-class ReactionBuilder<State, Value> {
+class ReactionBuilder<Event, State, Value> {
     fileprivate typealias Producer = SignalProducer<StateTransition<State, Value>, NoError>
     private var producers: [Producer] = []
     private let scheduler: Scheduler
-    init(_ scheduler: Scheduler) {
+    private let eventQueue: ValueQueue<Event>
+    init(_ scheduler: Scheduler, eventQueue: ValueQueue<Event>) {
         self.scheduler = scheduler
+        self.eventQueue = eventQueue
     }
+
+    private let zeroProducersStarted = Atomic(true)
 
     func workflowUpdated<W: Workflow>(
         _ handle: WorkflowHandle<W>,
         mapper: @escaping (WorkflowHandle<W>) -> StateTransition<State, Value>
     ) {
         let nextState = handle.toNextState()
+        let zeroProducersStarted = self.zeroProducersStarted
+
         producers.append(
             nextState.value.producer
                 .skipNil()
                 .observe(on: scheduler)
+                .filter { _ in
+                    zeroProducersStarted.value
+                }
                 .on(interrupted: {
                     nextState.cancel()
                 }, value: { _ in
+                    zeroProducersStarted.swap(false)
                     nextState.consume()
                 })
-                .map { handle.withState($0) }
+                .map({ handle.withState($0) })
                 .map(mapper)
         )
     }
 
-    func receivedEvent<Event>(_ event: SignalProducer<Event, NoError>,
-                              _ mapper: @escaping (Event) -> StateTransition<State, Value>?) {
-        producers.append(event
+    func received(_ mapper: @escaping (Event) -> StateTransition<State, Value>?) {
+        let nextEvent = eventQueue.nextValue()
+        let zeroProducersStarted = self.zeroProducersStarted
+
+        producers.append(nextEvent.value
+            .producer
+            .skipNil()
             .observe(on: scheduler)
+            .filter { _ in
+                zeroProducersStarted.value
+            }
+            .on(interrupted: {
+                nextEvent.cancel()
+            }, value: { _ in
+                zeroProducersStarted.swap(false)
+                nextEvent.consume()
+            })
             .map(mapper)
             .map { transition -> StateTransition<State, Value> in
                 guard let transition = transition else {
@@ -58,8 +80,12 @@ class ReactionBuilder<State, Value> {
 class Reaction<State, Value> {
     let signalProducer: SignalProducer<StateTransition<State, Value>, NoError>
 
-    init(scheduler: Scheduler, _ builderBlock: (ReactionBuilder<State, Value>) -> Void) {
-        let builder = ReactionBuilder<State, Value>(scheduler)
+    init<Event>(
+        scheduler: Scheduler,
+        eventQueue: ValueQueue<Event>,
+        _ builderBlock: (ReactionBuilder<Event, State, Value>) -> Void
+    ) {
+        let builder = ReactionBuilder<Event, State, Value>(scheduler, eventQueue: eventQueue)
         builderBlock(builder)
         signalProducer = builder.build()
     }
@@ -70,16 +96,6 @@ class Reaction<State, Value> {
 
     init(value: StateTransition<State, Value>) {
         signalProducer = SignalProducer(value: value)
-    }
-}
-
-class EventReaction<Event, State, Value>: Reaction<State, Value> {
-    init(scheduler: Scheduler,
-         _ event: SignalProducer<Event, NoError>,
-         _ mapper: @escaping (Event) -> StateTransition<State, Value>?) {
-        super.init(scheduler: scheduler) { when in
-            when.receivedEvent(event, mapper)
-        }
     }
 }
 

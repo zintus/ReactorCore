@@ -15,11 +15,10 @@ private class Register: ReactorCore<Register.Event, Register.State, Never> {
     }
 
     override func react(
-        to state: State,
-        eventSource: SignalProducer<Event, NoError>
+        to state: State
     ) -> Reaction<State, Never> {
         return buildReaction { when in
-            when.receivedEvent(eventSource) { event in
+            when.received { event in
                 switch event {
                 case .inc: return .enterState(State(register: state.register + 1))
                 case .dec: return .enterState(State(register: state.register - 1))
@@ -47,11 +46,11 @@ private class SimpleRegister {
     }
 
     func process(initial: State, events: [Event]) -> State {
-        var state = initial
+        let state = Atomic(initial)
         for event in events {
-            state = next(state: state, event: event)
+            state.swap(next(state: state.value, event: event))
         }
-        return state
+        return state.value
     }
 }
 

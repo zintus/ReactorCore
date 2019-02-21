@@ -56,7 +56,7 @@ class TestController: UIViewController {
         textField.text = "https://static.independent.co.uk/s3fs-public/thumbnails/image/2017/09/12/11/naturo-monkey-selfie.jpg?w968"
         viewModel.send(event: .textInput(textField.text!))
 
-        viewModel.launch()
+//        viewModel.launch()
     }
 
     private func updateCancelButtonState(isImageLoading: Bool) {

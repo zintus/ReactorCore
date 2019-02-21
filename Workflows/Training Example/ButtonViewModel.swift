@@ -24,10 +24,11 @@ class ButtonViewModel: ReactorCore<ButtonViewModel.Event, ButtonViewModel.ViewSt
         return URL(string: url)?.scheme != nil
     }
 
-    override func react(to state: ViewState,
-                        eventSource: SignalProducer<Event, NoError>) -> Reaction<ViewState, Never> {
+    override func react(
+        to state: ViewState
+    ) -> Reaction<ViewState, Never> {
         return buildReaction { [weak self] when in
-            when.receivedEvent(eventSource) { event in
+            when.received { event in
                 guard let self = self else { return .enterState(state) }
 
                 print("button state")

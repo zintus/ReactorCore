@@ -83,21 +83,12 @@ class TrainingViewModel: ReactorCore<TrainingViewModel.Event, TrainingViewModel.
         }
     }
 
-    // Переходы: зависят от текущего состояния
-    // Если прийдёт ивент, то ... (1)
-    // или если обновится состояние загрузчика картинок, то ... (2)
-    // или если обновится состояние кнопки, то ... (3)
-
-    // (1)/(2)
-    // (2)/(1)
-
     override func react(
-        to state: OverallState,
-        eventSource: SignalProducer<Event, NoError>
+        to state: OverallState
     ) -> Reaction<OverallState, Never> {
         return buildReaction { when in
             // (1)
-            when.receivedEvent(eventSource) { event in
+            when.received { event in
                 switch event {
                 case .increaseCounter:
                     return .enterState(state.with(counter: state.counter + 1))

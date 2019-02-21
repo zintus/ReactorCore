@@ -19,8 +19,7 @@ class FareModel: ReactorCore<FareModel.Event, FareModel.State, Never> {
 
     // State definition
     override func react(
-        to state: State,
-        eventSource _: SignalProducer<Event, NoError>
+        to state: State
     ) -> Reaction<State, Never> {
         switch state {
         case .loading:

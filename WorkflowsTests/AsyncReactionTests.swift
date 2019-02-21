@@ -5,15 +5,11 @@ import Result
 import XCTest
 
 private class Minimal: ReactorCore<Minimal.Event, Minimal.State, Never> {
-    enum Event {
+    enum Event {}
 
-    }
+    struct State {}
 
-    struct State {
-
-    }
-
-    override func react(to: State, eventSource: SignalProducer<Event, NoError>) -> Reaction<State, Never> {
+    override func react(to _: State) -> Reaction<State, Never> {
         return buildReaction { _ in }
     }
 }
@@ -31,20 +27,19 @@ private class FastAndSlow: ReactorCore<FastAndSlow.Event, FastAndSlow.State, Nev
     private let otherSource = WorkflowHandle(Minimal(initialState: .init()))
 
     override func react(
-        to state: State,
-        eventSource: SignalProducer<Event, NoError>
+        to state: State
     ) -> Reaction<State, Never> {
         guard state.event == nil else {
             return buildReaction { _ in }
         }
 
         return buildReaction { when in
-            when.receivedEvent(eventSource.delay(1, on: QueueScheduler())) { event in
-                return .enterState(State(event: event))
+            when.received { event in
+                .enterState(State(event: event))
             }
 
-            when.workflowUpdated(otherSource) { minimal in
-                return .enterState(State(event: .minimalState))
+            when.workflowUpdated(otherSource) { _ in
+                .enterState(State(event: .minimalState))
             }
         }
     }

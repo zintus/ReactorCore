@@ -34,12 +34,11 @@ class NetworkedButton: ReactorCore<NetworkedButton.Event, NetworkedButton.State,
 
     // State definition
     override func react(
-        to state: State,
-        eventSource: SignalProducer<Event, NoError>
+        to state: State
     ) -> Reaction<State, Never> {
         switch state {
         case .initial, .loaded:
-            return buildEventReaction(eventSource) { event in
+            return buildEventReaction { event in
                 switch event {
                 case .touchUpInside:
                     return .enterState(.loading)

@@ -4,13 +4,15 @@ import Result
 
 protocol Reactor: class, Workflow, SingleLike {
     func react(
-        to state: State,
-        eventSource: SignalProducer<Event, NoError>
+        to state: State
     ) -> Reaction<State, Value>
 
-    func buildReaction(_ builderBlock: (ReactionBuilder<State, Value>) -> Void) -> Reaction<State, Value>
-    func buildEventReaction(_ event: SignalProducer<Event, NoError>,
-                            _ mapper: @escaping (Event) -> StateTransition<State, Value>?) -> Reaction<State, Value>
+    func buildReaction(
+        _ builderBlock: (ReactionBuilder<Event, State, Value>) -> Void
+    ) -> Reaction<State, Value>
+    func buildEventReaction(
+        _ mapper: @escaping (Event) -> StateTransition<State, Value>?
+    ) -> Reaction<State, Value>
 }
 
 class ReactorCore<E, S, R>: Reactor {
@@ -28,8 +30,7 @@ class ReactorCore<E, S, R>: Reactor {
     let state: Property<CompleteState>
 
     func react(
-        to _: S,
-        eventSource _: SignalProducer<E, NoError>
+        to _: S
     ) -> Reaction<S, R> {
         fatalError()
     }
@@ -40,7 +41,7 @@ class ReactorCore<E, S, R>: Reactor {
 
             switch mutableState.value {
             case let .running(firstState):
-                mutableState <~ buildState(firstState, eventSource: eventsQueue)
+                mutableState <~ buildState(firstState)
             case .finished:
                 fatalError("Trying to start already finished workflow")
             }
@@ -49,13 +50,13 @@ class ReactorCore<E, S, R>: Reactor {
         }
     }
 
-    private let eventsQueue = ValueQueue<E>()
+    private let eventQueue = ValueQueue<E>()
 
     func send(event: E) {
-        eventsQueue.enqueue(event)
+        eventQueue.enqueue(event)
     }
 
-    private func buildState(_ initialState: State, eventSource: ValueQueue<E>) -> Property<WorkflowState<S, R>> {
+    private func buildState(_ initialState: State) -> Property<WorkflowState<S, R>> {
         typealias CompleteState = WorkflowState<S, R>
 
         let continueStateStream = { [weak self] (_ prev: CompleteState) -> SignalProducer<CompleteState, NoError> in
@@ -66,17 +67,7 @@ class ReactorCore<E, S, R>: Reactor {
                 return .empty
 
             case let .running(current):
-
-                let nextValue = eventSource.nextValue()
-                let eventWithConsumation = nextValue.value.producer
-                    .skipNil()
-                    .on(interrupted: {
-                        nextValue.cancel()
-                    }, value: { _ in
-                        nextValue.consume()
-                    })
-
-                return self.react(to: current, eventSource: eventWithConsumation)
+                return self.react(to: current)
                     .signalProducer
                     .take(first: 1) // This is crucial
                     .map { $0.nextState }
@@ -106,13 +97,20 @@ class ReactorCore<E, S, R>: Reactor {
 
     private let scheduler = QueueScheduler(name: "BaseReactor.scheduler")
 
-    func buildReaction(_ builderBlock: (ReactionBuilder<State, Value>) -> Void) -> Reaction<State, Value> {
-        return Reaction(scheduler: scheduler, builderBlock)
+    // TODO: Nice to have
+    // Build reaction which ignores events
+    func buildReaction(
+        _ builderBlock: (ReactionBuilder<Event, State, Value>) -> Void
+    ) -> Reaction<State, Value> {
+        return Reaction(scheduler: scheduler, eventQueue: eventQueue, builderBlock)
     }
 
-    func buildEventReaction(_ event: SignalProducer<Event, NoError>,
-                            _ mapper: @escaping (Event) -> StateTransition<State, Value>?) -> Reaction<State, Value> {
-        return EventReaction(scheduler: scheduler, event, mapper)
+    func buildEventReaction(
+        _ mapper: @escaping (Event) -> StateTransition<State, Value>?
+    ) -> Reaction<State, Value> {
+        return Reaction(scheduler: scheduler, eventQueue: eventQueue) { when in
+            when.received(mapper)
+        }
     }
 }
 
