@@ -62,12 +62,15 @@ class FastAndSlowTests: XCTestCase {
         let exp = expectation(description: "Process finished")
         core.state.producer
             .map { $0.unwrapped }
+            .filter { $0.event != nil }
             .logEvents()
-            .filter { $0.event == .slowEvent }
-            .take(first: 1)
-            .on(completed: {
-                exp.fulfill()
-            })
+            .on { state in
+                if state.event == .slowEvent {
+                    exp.fulfill()
+                } else {
+                    XCTFail()
+                }
+            }
             .start()
 
         waitForExpectations(timeout: 5)
