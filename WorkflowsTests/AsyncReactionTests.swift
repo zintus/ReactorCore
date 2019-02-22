@@ -34,8 +34,10 @@ private class FastAndSlow: ReactorCore<FastAndSlow.Event, FastAndSlow.State, Nev
         }
 
         return buildReaction { when in
-            when.received { event in
-                .enterState(State(event: event))
+            // This option wins
+            when.receivedFlatMap { event in
+                return SignalProducer(value: .enterState(State(event: event)))
+                    .delay(1, on: QueueScheduler())
             }
 
             when.workflowUpdated(otherSource) { _ in
@@ -46,9 +48,6 @@ private class FastAndSlow: ReactorCore<FastAndSlow.Event, FastAndSlow.State, Nev
 }
 
 class FastAndSlowTests: XCTestCase {
-    // FIXME:
-    // When next state processing takes time, first transition which started executing must win
-    // effectively ignoring other transitions (workflow update in our case)
     func testFastAndSlow() {
         let core = FastAndSlow(initialState: .init(event: nil))
         core.send(event: .slowEvent)

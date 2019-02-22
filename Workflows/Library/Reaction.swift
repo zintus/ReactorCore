@@ -13,6 +13,7 @@ class ReactionBuilder<Event, State, Value> {
     private var producers: [Producer] = []
     private let scheduler: Scheduler
     private let eventQueue: ValueQueue<Event>
+
     init(_ scheduler: Scheduler, eventQueue: ValueQueue<Event>) {
         self.scheduler = scheduler
         self.eventQueue = eventQueue
@@ -22,7 +23,16 @@ class ReactionBuilder<Event, State, Value> {
 
     func workflowUpdated<W: Workflow>(
         _ handle: WorkflowHandle<W>,
-        mapper: @escaping (WorkflowHandle<W>) -> StateTransition<State, Value>
+        mapper: @escaping (WorkflowHandle<W>) -> StateTransition<State, Value>?
+    ) {
+        workflowUpdatedFlatMap(handle) { handle in
+            SignalProducer(value: mapper(handle))
+        }
+    }
+
+    func workflowUpdatedFlatMap<W: Workflow>(
+        _ handle: WorkflowHandle<W>,
+        mapper: @escaping (WorkflowHandle<W>) -> SignalProducer<StateTransition<State, Value>?, NoError>
     ) {
         let nextState = handle.toNextState()
         let zeroProducersStarted = self.zeroProducersStarted
@@ -41,11 +51,24 @@ class ReactionBuilder<Event, State, Value> {
                     nextState.consume()
                 })
                 .map({ handle.withState($0) })
-                .map(mapper)
+                .flatMap(.latest, mapper)
+                .map { transition -> StateTransition<State, Value> in
+                    guard let transition = transition else {
+                        fatalError("Unhandled workflow state")
+                    }
+
+                    return transition
+                }
         )
     }
 
     func received(_ mapper: @escaping (Event) -> StateTransition<State, Value>?) {
+        receivedFlatMap { event in
+            return SignalProducer(value: mapper(event))
+        }
+    }
+
+    func receivedFlatMap(_ mapper: @escaping (Event) -> SignalProducer<StateTransition<State, Value>?, NoError>) {
         let nextEvent = eventQueue.nextValue()
         let zeroProducersStarted = self.zeroProducersStarted
 
@@ -62,14 +85,15 @@ class ReactionBuilder<Event, State, Value> {
                 zeroProducersStarted.swap(false)
                 nextEvent.consume()
             })
-            .map(mapper)
+            .flatMap(.latest, mapper)
             .map { transition -> StateTransition<State, Value> in
                 guard let transition = transition else {
                     fatalError("Unhandled event")
                 }
 
                 return transition
-        })
+        }
+        )
     }
 
     fileprivate func build() -> Producer {
