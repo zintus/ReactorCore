@@ -4,7 +4,7 @@ import Result
 @testable import Workflows
 import XCTest
 
-private class Register: ReactorCore<Register.Event, Register.State, Never> {
+class Register: ReactorCore<Register.Event, Register.State, Never> {
     enum Event {
         case inc
         case dec
