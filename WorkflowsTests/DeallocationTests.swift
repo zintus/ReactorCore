@@ -1,11 +1,10 @@
 import Foundation
-import XCTest
 @testable import Workflows
+import XCTest
 
 class DeallocationTests: XCTestCase {
     func testDeallocation() {
         weak var registerWeak: Register?
-
 
         _ = {
             let register = Register(initialState: .init(register: 0))
@@ -13,7 +12,6 @@ class DeallocationTests: XCTestCase {
             register.launch()
             registerWeak = register
         }()
-
 
         XCTAssert(registerWeak == nil)
     }

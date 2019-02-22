@@ -97,8 +97,6 @@ class ReactorCore<E, S, R>: Reactor {
 
     private let scheduler = QueueScheduler(name: "BaseReactor.scheduler")
 
-    // TODO: Nice to have
-    // Build reaction which ignores events
     func buildReaction(
         _ builderBlock: (ReactionBuilder<Event, State, Value>) -> Void
     ) -> Reaction<State, Value> {
@@ -123,6 +121,12 @@ class ValueQueue<Value> {
     private let state = Atomic<State>(([], [], false))
 
     private func lockFirstEvent(state: inout State) {
+        if state.lockedFirstEntry, let hasEnded = state.waiters.first?.lifetime.hasEnded {
+            if hasEnded {
+                state.lockedFirstEntry = false
+            }
+        }
+
         guard !state.lockedFirstEntry else { return }
 
         state.waiters = state.waiters.filter { !$0.lifetime.hasEnded }
@@ -228,5 +232,11 @@ private extension StateTransition {
         case let .enterState(state): return .running(state)
         case let .finishWith(value): return .finished(value)
         }
+    }
+}
+
+extension Reactor where Value == Never {
+    var unwrappedState: Property<State> {
+        return state.map { $0.unwrapped }
     }
 }

@@ -36,7 +36,7 @@ private class FastAndSlow: ReactorCore<FastAndSlow.Event, FastAndSlow.State, Nev
         return buildReaction { when in
             // This option wins
             when.receivedFlatMap { event in
-                return SignalProducer(value: .enterState(State(event: event)))
+                SignalProducer(value: .enterState(State(event: event)))
                     .delay(1, on: QueueScheduler())
             }
 

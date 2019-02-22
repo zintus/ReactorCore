@@ -42,9 +42,9 @@ class ReactionBuilder<Event, State, Value> {
                 .skipNil()
                 .observe(on: scheduler)
                 .filter { _ in
-                    zeroProducersStarted.value
+                    return zeroProducersStarted.value
                 }
-                .on(interrupted: {
+                .on(disposed: {
                     nextState.cancel()
                 }, value: { _ in
                     zeroProducersStarted.swap(false)
@@ -64,7 +64,7 @@ class ReactionBuilder<Event, State, Value> {
 
     func received(_ mapper: @escaping (Event) -> StateTransition<State, Value>?) {
         receivedFlatMap { event in
-            return SignalProducer(value: mapper(event))
+            SignalProducer(value: mapper(event))
         }
     }
 
@@ -79,7 +79,7 @@ class ReactionBuilder<Event, State, Value> {
             .filter { _ in
                 zeroProducersStarted.value
             }
-            .on(interrupted: {
+            .on(disposed: {
                 nextEvent.cancel()
             }, value: { _ in
                 zeroProducersStarted.swap(false)
@@ -92,8 +92,7 @@ class ReactionBuilder<Event, State, Value> {
                 }
 
                 return transition
-        }
-        )
+        })
     }
 
     fileprivate func build() -> Producer {
