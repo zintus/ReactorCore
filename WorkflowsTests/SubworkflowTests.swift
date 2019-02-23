@@ -86,6 +86,6 @@ class SubworkflowTests: XCTestCase {
             })
             .start()
 
-        waitForExpectations(timeout: 10)
+        waitForExpectations(timeout: 15)
     }
 }

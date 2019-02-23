@@ -46,9 +46,10 @@ private class SimpleRegister {
     }
 
     func process(initial: State, events: [Event]) -> State {
-        let state = Atomic(initial)
-        for event in events {
-            state.swap(next(state: state.value, event: event))
+        let state = MutableProperty(initial)
+        state <~ SignalProducer(events)
+            .scan(initial) { state, event in
+            self.next(state: state, event: event)
         }
         return state.value
     }

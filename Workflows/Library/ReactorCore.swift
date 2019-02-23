@@ -137,15 +137,17 @@ class ValueQueue<Value> {
         private weak var queue: ValueQueue<Value>?
         private var observer: Observer?
         private(set) var producer: Producer!
+    
+        private let changesQueue = DispatchQueue(label: "NextValue")
 
         func consume() {
-            DispatchQueue.global().async {
+            changesQueue.async {
                 self.queue?.consume(self.observer!)
             }
         }
 
         func cancel() {
-            DispatchQueue.global().async {
+            changesQueue.async {
                 self.queue?.cancel(self.observer!)
             }
         }
