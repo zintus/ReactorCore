@@ -38,8 +38,7 @@ class ReactionBuilder<Event, State, Value> {
         let zeroProducersStarted = self.zeroProducersStarted
 
         producers.append(
-            nextState.value.producer
-                .skipNil()
+            nextState.producer
                 .observe(on: scheduler)
                 .filter { _ in
                     return zeroProducersStarted.value
@@ -72,9 +71,7 @@ class ReactionBuilder<Event, State, Value> {
         let nextEvent = eventQueue.nextValue()
         let zeroProducersStarted = self.zeroProducersStarted
 
-        producers.append(nextEvent.value
-            .producer
-            .skipNil()
+        producers.append(nextEvent.producer
             .observe(on: scheduler)
             .filter { _ in
                 zeroProducersStarted.value
@@ -149,7 +146,7 @@ class WorkflowHandle<W: Workflow>: WorkflowInput {
         self.workflow = workflow
         stateTracker = WorkflowStateTracker(workflow: workflow)
         let nextState = stateTracker.firstState()
-        state = nextState.value.value! // Guaranteed by first sync state
+        state = nextState.producer.take(first: 1).single()!.value! // Guaranteed by first sync state
         nextState.consume()
         workflow.launch()
     }

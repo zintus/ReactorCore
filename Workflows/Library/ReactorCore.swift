@@ -121,15 +121,7 @@ class ValueQueue<Value> {
     private let state = Atomic<State>(([], [], false))
 
     private func lockFirstEvent(state: inout State) {
-        if state.lockedFirstEntry, let hasEnded = state.waiters.first?.lifetime.hasEnded {
-            if hasEnded {
-                state.lockedFirstEntry = false
-            }
-        }
-
         guard !state.lockedFirstEntry else { return }
-
-        state.waiters = state.waiters.filter { !$0.lifetime.hasEnded }
 
         if let first = state.values.first,
             let waiter = state.waiters.first {
@@ -140,34 +132,40 @@ class ValueQueue<Value> {
     }
 
     class NextValue {
-        typealias Observer = SignalProducer<Value, NoError>.ProducedSignal.Observer
+        typealias Producer = SignalProducer<Value, NoError>
+        typealias Observer = Producer.ProducedSignal.Observer
         private weak var queue: ValueQueue<Value>?
-        private let observer: Observer
-        let value: Property<Value?>
+        private var observer: Observer?
+        private(set) var producer: Producer!
 
         func consume() {
             DispatchQueue.global().async {
-                self.queue?.consume(self.observer)
+                self.queue?.consume(self.observer!)
             }
         }
 
         func cancel() {
             DispatchQueue.global().async {
-                self.queue?.cancel(self.observer)
+                self.queue?.cancel(self.observer!)
             }
         }
-
-        init(property: Property<Value?>, observer: Observer, queue: ValueQueue<Value>) {
-            value = property
+        
+        init(queue: ValueQueue<Value>, _ startHandler: @escaping (Producer.ProducedSignal.Observer, Lifetime) -> Void) {
             self.queue = queue
-            self.observer = observer
+            
+            producer = Producer { [weak self] observer, lifetime in
+                guard let self = self else { return }
+                
+                self.observer = observer
+                startHandler(observer, lifetime)
+            }
         }
     }
 
     private func consume(_ observer: SignalProducer<Value, NoError>.ProducedSignal.Observer) {
         state.modify { (state: inout State) in
             guard let index = state.waiters.firstIndex(where: { $0.observer === observer }) else {
-                return
+                fatalError()
             }
 
             if index == 0 {
@@ -199,21 +197,13 @@ class ValueQueue<Value> {
     }
 
     func nextValue() -> NextValue {
-        var currentObserver: SignalProducer<Value, NoError>.ProducedSignal.Observer?
-
-        let producer = SignalProducer<Value, NoError> { observer, lifetime in
-            currentObserver = observer
-
+        return NextValue(queue: self) { observer, lifetime in
             self.state.modify { (state: inout State) in
                 state.waiters.append((observer, lifetime))
-
+                
                 self.lockFirstEvent(state: &state)
             }
         }
-
-        return NextValue(property: Property(initial: nil, then: producer),
-                         observer: currentObserver!,
-                         queue: self)
     }
 
     func enqueue(_ value: Value) {

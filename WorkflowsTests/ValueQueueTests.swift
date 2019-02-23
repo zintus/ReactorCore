@@ -1,10 +1,15 @@
 @testable import Workflows
 import XCTest
 
-private extension ValueQueue.NextValue {
+private extension ValueQueue {
     var getUnsafe: Value {
-        let result = value.producer.skipNil().take(first: 1).single()!.value!
-        consume()
+        let nextValue2 = nextValue()
+        let result = nextValue2.producer
+            .on { _ in
+                nextValue2.consume()
+            }
+            .take(first: 1)
+            .single()!.value!
         return result
     }
 }
@@ -15,8 +20,8 @@ class ValueQueueTests: XCTestCase {
         queue.enqueue(1)
         queue.enqueue(2)
 
-        XCTAssert(queue.nextValue().getUnsafe == 1)
-        XCTAssert(queue.nextValue().getUnsafe == 2)
+        XCTAssert(queue.getUnsafe == 1)
+        XCTAssert(queue.getUnsafe == 2)
     }
 
     func testEventAfterRequest() {
@@ -29,8 +34,8 @@ class ValueQueueTests: XCTestCase {
             }
         }
 
-        XCTAssert(queue.nextValue().getUnsafe == 1)
-        XCTAssert(queue.nextValue().getUnsafe == 2)
+        XCTAssert(queue.getUnsafe == 1)
+        XCTAssert(queue.getUnsafe == 2)
     }
 
     // FIXME: if queues are full, interrupt won't come through it
@@ -51,13 +56,15 @@ class ValueQueueTests: XCTestCase {
         let dispatchGroup = DispatchGroup()
         for _ in 1 ..< count {
             concurrent.async(group: dispatchGroup) {
-                _ = queue.nextValue().getUnsafe
+                _ = queue.getUnsafe
             }
         }
 
         dispatchGroup.wait()
 
-        XCTAssert(queue.nextValue().getUnsafe == count)
+        let value = queue.getUnsafe
+        print(value)
+        XCTAssert(value == count)
     }
 
     func skipped_testInsequentialDisposal() {
@@ -65,14 +72,14 @@ class ValueQueueTests: XCTestCase {
 
         var recievedValue: Int?
 
-        let next1 = queue.nextValue().value.producer.skipNil()
+        let next1 = queue.nextValue().producer
             .on { value in
                 print("first recieved \(value)")
                 recievedValue = value
             }
             .start()
-        let next2 = queue.nextValue().value.producer.skipNil().start()
-        let next3 = queue.nextValue().value.producer.skipNil().start()
+        let next2 = queue.nextValue().producer.start()
+        let next3 = queue.nextValue().producer.start()
 
         queue.enqueue(1)
         next3.dispose()
@@ -82,7 +89,7 @@ class ValueQueueTests: XCTestCase {
 
         queue.enqueue(3)
         // This must deadlock, because next1 is still alive
-        let got = queue.nextValue().getUnsafe
+        let got = queue.getUnsafe
         XCTAssert(got == 3)
         print(got)
 

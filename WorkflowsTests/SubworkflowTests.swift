@@ -52,7 +52,7 @@ class Aggregator: ReactorCore<Aggregator.Event, Aggregator.State, Never> {
 
 class SubworkflowTests: XCTestCase {
     private enum Consts {
-        static let count = 500
+        static let count = 750
     }
 
     func testAggregation() {
@@ -86,6 +86,6 @@ class SubworkflowTests: XCTestCase {
             })
             .start()
 
-        waitForExpectations(timeout: 5)
+        waitForExpectations(timeout: 10)
     }
 }
