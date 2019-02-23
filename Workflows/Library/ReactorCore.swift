@@ -71,22 +71,29 @@ class ReactorCore<E, S, R>: Reactor {
                     .signalProducer
                     .take(first: 1) // This is crucial
                     .map { $0.nextState }
+                    .observe(on: self.scheduler)
             }
         }
 
-        let result: SignalProducer<CompleteState, NoError> = SignalProducer { observer, lifetime in
-            DispatchQueue.global().async {
-                var currentState = CompleteState.running(initialState)
-
-                while let nextState = continueStateStream(currentState)
-                    .take(during: lifetime)
-                    .single()?.value {
-                    observer.send(value: nextState)
-                    currentState = nextState
-                }
-
-                observer.sendCompleted()
+        let result: SignalProducer<CompleteState, NoError> = SignalProducer { [weak self] observer, lifetime in
+            var currentState = CompleteState.running(initialState)
+            
+            var subscribeNextState: (() -> Void)!
+            
+            subscribeNextState = { [weak self] in
+                guard self != nil else { return }
+                
+                lifetime += continueStateStream(currentState)
+                    .on { nextState in
+                        currentState = nextState
+                        observer.send(value: nextState)
+                        
+                        subscribeNextState()
+                    }
+                    .start()
             }
+            
+            subscribeNextState()
         }
 
         let first = CompleteState.running(initialState)
