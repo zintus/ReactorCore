@@ -20,7 +20,7 @@ class FareModel: ReactorCore<FareModel.Event, FareModel.State, Never> {
     // State definition
     override func react(
         to state: State
-    ) -> Reaction<State, Never> {
+    ) -> Reaction<Event, State, Never> {
         switch state {
         case .loading:
             return Reaction(

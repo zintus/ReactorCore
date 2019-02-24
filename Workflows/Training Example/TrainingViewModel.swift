@@ -22,20 +22,20 @@ class TrainingViewModel: ReactorCore<TrainingViewModel.Event, TrainingViewModel.
 
     struct OverallState {
         let counter: Int
-        let imageLoader: WorkflowHandle<ImageLoader>?
+        let imageLoader: WorkflowHandle2<ImageLoader>?
         let labelState: LabelState
         let textFieldState: TextFieldState
-        fileprivate let button1State: WorkflowHandle<ButtonViewModel>
+        fileprivate let button1State: WorkflowHandle2<ButtonViewModel>
         var buttonState: ButtonViewModel.State {
             return button1State.state.unwrapped.withCounter(counter)
         }
 
-        static func makeInitial() -> OverallState {
+        static func makeInitial(scheduler: QueueScheduler) -> OverallState {
             return OverallState(counter: 0,
                                 imageLoader: nil,
                                 labelState: .placeholder,
                                 textFieldState: .error,
-                                button1State: WorkflowHandle(ButtonViewModel()))
+                                button1State: WorkflowHandle2(ButtonViewModel(), scheduler: scheduler))
         }
 
         fileprivate func with(counter: Int) -> OverallState {
@@ -58,7 +58,7 @@ class TrainingViewModel: ReactorCore<TrainingViewModel.Event, TrainingViewModel.
             return self
         }
 
-        fileprivate func withImageLoader(_ loader: WorkflowHandle<ImageLoader>) -> OverallState {
+        fileprivate func withImageLoader(_ loader: WorkflowHandle2<ImageLoader>) -> OverallState {
             return OverallState(counter: counter,
                                 imageLoader: loader,
                                 labelState: labelState,
@@ -74,7 +74,7 @@ class TrainingViewModel: ReactorCore<TrainingViewModel.Event, TrainingViewModel.
             return false
         }
 
-        fileprivate func withButton(_ button: WorkflowHandle<ButtonViewModel>) -> OverallState {
+        fileprivate func withButton(_ button: WorkflowHandle2<ButtonViewModel>) -> OverallState {
             return OverallState(counter: counter,
                                 imageLoader: imageLoader,
                                 labelState: labelState,
@@ -85,8 +85,8 @@ class TrainingViewModel: ReactorCore<TrainingViewModel.Event, TrainingViewModel.
 
     override func react(
         to state: OverallState
-    ) -> Reaction<OverallState, Never> {
-        return buildReaction { when in
+    ) -> Reaction<Event, OverallState, Never> {
+        return buildReaction { [unowned self] when in
             // (1)
             when.received { event in
                 switch event {
@@ -100,7 +100,7 @@ class TrainingViewModel: ReactorCore<TrainingViewModel.Event, TrainingViewModel.
                 case let .loadImage(url):
                     state.button1State.send(event: .imageIsLoading(true))
                     let workflow = loadImageWorkflow(url: url)
-                    let imageLoadingHandle = WorkflowHandle(workflow)
+                    let imageLoadingHandle = WorkflowHandle2(workflow, scheduler: self.scheduler)
                     return .enterState(state.withImageLoader(imageLoadingHandle))
 
                 case let .textInput(text):
@@ -131,6 +131,11 @@ class TrainingViewModel: ReactorCore<TrainingViewModel.Event, TrainingViewModel.
                 .enterState(state.withButton(handle))
             }
         }
+    }
+    
+    static func makeInstance() -> TrainingViewModel {
+        let scheduler = QueueScheduler(name: "TrainingViewModel.scheduler")
+        return TrainingViewModel(initialState: .makeInitial(scheduler: scheduler), scheduler: scheduler)
     }
 }
 

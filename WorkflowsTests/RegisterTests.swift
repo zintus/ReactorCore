@@ -16,7 +16,7 @@ class Register: ReactorCore<Register.Event, Register.State, Never> {
 
     override func react(
         to state: State
-    ) -> Reaction<State, Never> {
+    ) -> Reaction<Event, State, Never> {
         return buildReaction { when in
             when.received { event in
                 switch event {

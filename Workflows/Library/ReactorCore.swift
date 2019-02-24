@@ -5,14 +5,14 @@ import Result
 protocol Reactor: class, Workflow, SingleLike {
     func react(
         to state: State
-    ) -> Reaction<State, Value>
+    ) -> Reaction<Event, State, Value>
 
     func buildReaction(
-        _ builderBlock: (ReactionBuilder<Event, State, Value>) -> Void
-    ) -> Reaction<State, Value>
+        _ builderBlock: (ReactionBuilder2<Event, State, Value>) -> Void
+    ) -> Reaction<Event, State, Value>
     func buildEventReaction(
         _ mapper: @escaping (Event) -> StateTransition<State, Value>?
-    ) -> Reaction<State, Value>
+    ) -> Reaction<Event, State, Value>
 }
 
 class ReactorCore<E, S, R>: Reactor {
@@ -20,9 +20,11 @@ class ReactorCore<E, S, R>: Reactor {
     typealias State = S
     typealias Value = R
 
-    init(initialState: S) {
+    init(initialState: S, scheduler: QueueScheduler = QueueScheduler(name: "ReactorCore.Scheduler")) {
+        self.scheduler = scheduler
         mutableState = MutableProperty(CompleteState.running(initialState))
         state = Property(capturing: mutableState)
+        eventQueue = ValueQueue2<E>(scheduler)
     }
 
     private var launched: Bool = false
@@ -31,7 +33,7 @@ class ReactorCore<E, S, R>: Reactor {
 
     func react(
         to _: S
-    ) -> Reaction<S, R> {
+    ) -> Reaction<E, S, R> {
         fatalError()
     }
 
@@ -50,7 +52,7 @@ class ReactorCore<E, S, R>: Reactor {
         }
     }
 
-    private let eventQueue = ValueQueue<E>()
+    private let eventQueue: ValueQueue2<E>
 
     func send(event: E) {
         eventQueue.enqueue(event)
@@ -69,9 +71,7 @@ class ReactorCore<E, S, R>: Reactor {
             case let .running(current):
                 return self.react(to: current)
                     .signalProducer
-                    .take(first: 1) // This is crucial
                     .map { $0.nextState }
-                    .observe(on: self.scheduler)
             }
         }
 
@@ -81,16 +81,18 @@ class ReactorCore<E, S, R>: Reactor {
             var subscribeNextState: (() -> Void)!
             
             subscribeNextState = { [weak self] in
-                guard self != nil else { return }
+                guard let self = self else { return }
                 
-                lifetime += continueStateStream(currentState)
-                    .on { nextState in
-                        currentState = nextState
-                        observer.send(value: nextState)
-                        
-                        subscribeNextState()
-                    }
-                    .start()
+                lifetime += self.scheduler.schedule {
+                    lifetime += continueStateStream(currentState)
+                        .on { nextState in
+                            currentState = nextState
+                            observer.send(value: nextState)
+                            
+                            subscribeNextState()
+                        }
+                        .start()
+                }
             }
             
             subscribeNextState()
@@ -102,17 +104,17 @@ class ReactorCore<E, S, R>: Reactor {
 
     // MARK: - Build Reactions
 
-    private let scheduler = QueueScheduler(name: "BaseReactor.scheduler")
+    let scheduler: QueueScheduler
 
     func buildReaction(
-        _ builderBlock: (ReactionBuilder<Event, State, Value>) -> Void
-    ) -> Reaction<State, Value> {
+        _ builderBlock: (ReactionBuilder2<Event, State, Value>) -> Void
+    ) -> Reaction<Event, State, Value> {
         return Reaction(scheduler: scheduler, eventQueue: eventQueue, builderBlock)
     }
 
     func buildEventReaction(
         _ mapper: @escaping (Event) -> StateTransition<State, Value>?
-    ) -> Reaction<State, Value> {
+    ) -> Reaction<Event, State, Value> {
         return Reaction(scheduler: scheduler, eventQueue: eventQueue) { when in
             when.received(mapper)
         }

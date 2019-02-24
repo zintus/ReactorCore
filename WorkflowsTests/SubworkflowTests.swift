@@ -1,6 +1,7 @@
 import Foundation
 @testable import Workflows
 import XCTest
+import ReactiveSwift
 
 class Aggregator: ReactorCore<Aggregator.Event, Aggregator.State, Never> {
     enum Event {
@@ -10,7 +11,7 @@ class Aggregator: ReactorCore<Aggregator.Event, Aggregator.State, Never> {
     struct State {
         let counter: Int
 
-        let children: [WorkflowHandle<Aggregator>]
+        let children: [WorkflowHandle2<Aggregator>]
 
         var total: Int {
             return counter + children.reduce(into: 0) { $0 = $0 + $1.state.unwrapped.counter }
@@ -20,16 +21,17 @@ class Aggregator: ReactorCore<Aggregator.Event, Aggregator.State, Never> {
             return State(counter: counter, children: children)
         }
 
-        func with(children: [WorkflowHandle<Aggregator>]) -> State {
+        func with(children: [WorkflowHandle2<Aggregator>]) -> State {
             return State(counter: counter, children: children)
         }
     }
 
     init(_ children: [Aggregator]) {
-        super.init(initialState: .init(counter: 0, children: children.map { WorkflowHandle($0) }))
+        let scheduler = QueueScheduler(name: "Aggregator.scheduler")
+        super.init(initialState: .init(counter: 0, children: children.map { WorkflowHandle2($0, scheduler: scheduler) }), scheduler: scheduler)
     }
 
-    override func react(to state: State) -> Reaction<State, Never> {
+    override func react(to state: State) -> Reaction<Event, State, Never> {
         return buildReaction { when in
             when.received { event in
                 switch event {

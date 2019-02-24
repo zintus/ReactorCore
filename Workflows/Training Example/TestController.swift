@@ -37,7 +37,7 @@ class TestController: UIViewController {
         viewModel.process(input: .cancelImageLoad)
     }
 
-    private let viewModel = TrainingViewModel(initialState: .makeInitial())
+    private let viewModel = TrainingViewModel.makeInstance()
 
     override func viewDidLoad() {
         super.viewDidLoad()

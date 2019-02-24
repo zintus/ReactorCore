@@ -9,7 +9,7 @@ private class Minimal: ReactorCore<Minimal.Event, Minimal.State, Never> {
 
     struct State {}
 
-    override func react(to _: State) -> Reaction<State, Never> {
+    override func react(to _: State) -> Reaction<Event, State, Never> {
         return buildReaction { _ in }
     }
 }
@@ -23,17 +23,22 @@ private class FastAndSlow: ReactorCore<FastAndSlow.Event, FastAndSlow.State, Nev
     struct State {
         let event: Event?
     }
+    
+    override init(initialState: State, scheduler: QueueScheduler = QueueScheduler(name: "QueueScheduler.FastAndSlow")) {
+        otherSource = WorkflowHandle2(Minimal(initialState: .init()), scheduler: scheduler)
+        super.init(initialState: initialState, scheduler: scheduler)
+    }
 
-    private let otherSource = WorkflowHandle(Minimal(initialState: .init()))
+    private let otherSource: WorkflowHandle2<Minimal>
 
     override func react(
         to state: State
-    ) -> Reaction<State, Never> {
+    ) -> Reaction<Event, State, Never> {
         guard state.event == nil else {
             return buildReaction { _ in }
         }
 
-        return buildReaction { when in
+        return buildReaction { (when: ReactionBuilder2<Event, State, Never>) in
             // This option wins
             when.receivedFlatMap { event in
                 SignalProducer(value: .enterState(State(event: event)))
@@ -41,7 +46,7 @@ private class FastAndSlow: ReactorCore<FastAndSlow.Event, FastAndSlow.State, Nev
             }
 
             when.workflowUpdated(otherSource) { _ in
-                .enterState(State(event: .minimalState))
+                .enterState(State(event: Event.minimalState))
             }
         }
     }

@@ -26,7 +26,7 @@ class ButtonViewModel: ReactorCore<ButtonViewModel.Event, ButtonViewModel.ViewSt
 
     override func react(
         to state: ViewState
-    ) -> Reaction<ViewState, Never> {
+    ) -> Reaction<Event, ViewState, Never> {
         return buildReaction { [weak self] when in
             when.received { event in
                 guard let self = self else { return .enterState(state) }

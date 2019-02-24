@@ -40,6 +40,9 @@
                <Test
                   Identifier = "RegisterTests">
                </Test>
+               <Test
+                  Identifier = "ValueQueueTests">
+               </Test>
             </SkippedTests>
          </TestableReference>
       </Testables>
@@ -84,7 +87,8 @@
       savedToolIdentifier = ""
       useCustomWorkingDirectory = "NO"
       debugDocumentVersioning = "YES">
-      <MacroExpansion>
+      <BuildableProductRunnable
+         runnableDebuggingMode = "0">
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "C07A191E220454CD00AFE6E7"
@@ -92,7 +96,7 @@
             BlueprintName = "Workflows"
             ReferencedContainer = "container:Workflows.xcodeproj">
          </BuildableReference>
-      </MacroExpansion>
+      </BuildableProductRunnable>
    </ProfileAction>
    <AnalyzeAction
       buildConfiguration = "Debug">

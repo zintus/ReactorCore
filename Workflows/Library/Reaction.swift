@@ -43,7 +43,7 @@ class ReactionBuilder<Event, State, Value> {
                 .filter { _ in
                     return zeroProducersStarted.value
                 }
-                .on(disposed: {
+                .on(terminated: {
                     nextState.cancel()
                 }, value: { _ in
                     zeroProducersStarted.swap(false)
@@ -76,7 +76,7 @@ class ReactionBuilder<Event, State, Value> {
             .filter { _ in
                 zeroProducersStarted.value
             }
-            .on(disposed: {
+            .on(terminated: {
                 nextEvent.cancel()
             }, value: { _ in
                 zeroProducersStarted.swap(false)
@@ -97,17 +97,26 @@ class ReactionBuilder<Event, State, Value> {
     }
 }
 
-class Reaction<State, Value> {
+class Reaction<Event, State, Value> {
     let signalProducer: SignalProducer<StateTransition<State, Value>, NoError>
 
-    init<Event>(
-        scheduler: Scheduler,
-        eventQueue: ValueQueue<Event>,
-        _ builderBlock: (ReactionBuilder<Event, State, Value>) -> Void
+    init(
+        scheduler: QueueScheduler,
+        eventQueue: ValueQueue2<Event>,
+        _ builderBlock: (ReactionBuilder2<Event, State, Value>) -> Void
     ) {
-        let builder = ReactionBuilder<Event, State, Value>(scheduler, eventQueue: eventQueue)
+        let builder = ReactionBuilder2<Event, State, Value>(scheduler, eventQueue: eventQueue)
         builderBlock(builder)
-        signalProducer = builder.build()
+        signalProducer = SignalProducer { observer, lifetime in
+            builder.futureState.onValue = { value in
+                observer.send(value: value)
+                observer.sendCompleted()
+            }
+            
+            lifetime.observeEnded {
+                withExtendedLifetime(builder) { }
+            }
+        }
     }
 
     init(_ signalProducer: SignalProducer<StateTransition<State, Value>, NoError>) {

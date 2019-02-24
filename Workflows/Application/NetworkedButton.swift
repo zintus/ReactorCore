@@ -35,7 +35,7 @@ class NetworkedButton: ReactorCore<NetworkedButton.Event, NetworkedButton.State,
     // State definition
     override func react(
         to state: State
-    ) -> Reaction<State, Never> {
+    ) -> Reaction<Event, State, Never> {
         switch state {
         case .initial, .loaded:
             return buildEventReaction { event in
