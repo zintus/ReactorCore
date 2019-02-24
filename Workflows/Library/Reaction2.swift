@@ -55,8 +55,6 @@ class ValueQueue2<Value> {
         init(value: Value?, queue: ValueQueue2<Value>) {
             self.value = value
             self.queue = queue
-            
-            print("next init")
         }
         
         func fill(_ value: Value) {
