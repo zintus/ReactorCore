@@ -250,19 +250,49 @@ class WorkflowHandle2<W: Workflow> {
     }
 }
 
+// WARN: Don't edit this, copy paste from above
 extension ReactionBuilder2 {
     func workflowUpdated<W: Workflow>(
         _ handle: WorkflowHandle2<W>,
         mapper: @escaping (WorkflowHandle2<W>) -> StateTransition<State, Value>?
         ) {
-        workflowUpdatedFlatMap(handle) { handle in
-            SignalProducer(value: mapper(handle))
+        guard awaitingNexts != nil else {
+            // Someone already computed next state
+            return
         }
+        let nextState = handle.toNextState()
+        nextState.onValue = { [weak self] newState in
+            guard let self = self else { return }
+            
+            self.awaitingNexts = nil
+            
+            let newHandle = handle.withState(newState)
+            self.futureState.value = mapper(newHandle)
+        }
+        guard let nexts = awaitingNexts else {
+            // Someone already computed next state
+            return
+        }
+        self.awaitingNexts = nexts + [nextState]
     }
     
     func received(_ mapper: @escaping (Event) -> StateTransition<State, Value>?) {
-        receivedFlatMap { event in
-            SignalProducer(value: mapper(event))
+        guard awaitingNexts != nil else {
+            // Someone already computed next state
+            return
         }
+        let nextState = eventQueue.dequeue()
+        nextState.onValue = { [weak self] newState in
+            guard let self = self else { return }
+            
+            self.awaitingNexts = nil
+            
+            self.futureState.value = mapper(newState)
+        }
+        guard let nexts = awaitingNexts else {
+            // Someone already computed next state
+            return
+        }
+        self.awaitingNexts = nexts + [nextState]
     }
 }

@@ -110,7 +110,10 @@ class Reaction<Event, State, Value> {
         signalProducer = SignalProducer { observer, lifetime in
             builder.futureState.onValue = { value in
                 observer.send(value: value)
-                observer.sendCompleted()
+                
+                DispatchQueue.global().async {
+                    observer.sendCompleted()
+                }
             }
             
             lifetime.observeEnded {
