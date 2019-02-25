@@ -3,15 +3,15 @@ import ReactiveSwift
 import Result
 
 // Pure syntactic sugar
-enum StateTransition<State, Value> {
+public enum StateTransition<State, Value> {
     case enterState(State)
     case finishWith(Value)
 }
 
-class Reaction<Event, State, Value> {
+public class Reaction<Event, State, Value> {
     let signalProducer: SignalProducer<StateTransition<State, Value>, NoError>
 
-    init(
+    public init(
         scheduler: QueueScheduler,
         eventQueue: ValueQueue<Event>,
         _ builderBlock: (ReactionBuilder<Event, State, Value>) -> Void
@@ -33,11 +33,11 @@ class Reaction<Event, State, Value> {
         }
     }
 
-    init(_ signalProducer: SignalProducer<StateTransition<State, Value>, NoError>) {
+    public init(_ signalProducer: SignalProducer<StateTransition<State, Value>, NoError>) {
         self.signalProducer = signalProducer
     }
 
-    init(value: StateTransition<State, Value>) {
+    public init(value: StateTransition<State, Value>) {
         signalProducer = SignalProducer(value: value)
     }
 }

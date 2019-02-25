@@ -1,6 +1,7 @@
 import Foundation
 import ReactiveSwift
 import Result
+import ReactorCore
 
 typealias Fare = Int
 

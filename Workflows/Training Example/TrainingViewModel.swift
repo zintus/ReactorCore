@@ -1,6 +1,7 @@
 import ReactiveSwift
 import Result
 import UIKit
+import ReactorCore
 
 class TrainingViewModel: ReactorCore<TrainingViewModel.Event, TrainingViewModel.OverallState, Never> {
     enum Event {

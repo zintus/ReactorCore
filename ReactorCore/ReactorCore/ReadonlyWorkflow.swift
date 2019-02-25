@@ -2,22 +2,22 @@ import Foundation
 import ReactiveSwift
 import Result
 
-class ReadonlyWorkflow<Result>: Workflow, SingleLike {
-    typealias Event = Readonly
-    typealias Value = Result
+public class ReadonlyWorkflow<Result>: Workflow, SingleLike {
+    public typealias Event = Readonly
+    public typealias Value = Result
 
-    enum Readonly {}
-    enum State {
+    public enum Readonly {}
+    public enum State {
         // Hide this better
         case run(SignalProducer<Result, NoError>)
     }
 
-    required init(initialState: State) {
+    public required init(initialState: State) {
         mutableState = MutableProperty(.running(initialState))
         state = Property(capturing: mutableState)
     }
 
-    func launch() {
+    public func launch() {
         switch mutableState.value {
         case let .running(.run(producer)):
             mutableState <~ producer.map(WorkflowState.finished)
@@ -27,16 +27,16 @@ class ReadonlyWorkflow<Result>: Workflow, SingleLike {
     }
 
     private let mutableState: MutableProperty<CompleteState>
-    let state: Property<CompleteState>
+    public let state: Property<CompleteState>
 
-    func send(event _: Readonly) {}
+    public func send(event _: Readonly) {}
 
     deinit {
         print("deinit")
     }
 }
 
-extension SignalProducer where Error == NoError {
+public extension SignalProducer where Error == NoError {
     func asWorkflow() -> ReadonlyWorkflow<Value> {
         return ReadonlyWorkflow(initialState: .run(self))
     }

@@ -1,0 +1,6 @@
+framework module ReactorCore {
+  umbrella header "ReactorCore-umbrella.h"
+
+  export *
+  module * { export * }
+}

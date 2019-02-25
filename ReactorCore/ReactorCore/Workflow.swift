@@ -2,23 +2,17 @@ import Foundation
 import ReactiveSwift
 import Result
 
-// build copy of training example
-// cancel button for image loading
-// subworkflow: load image (.loading, .loaded)
+public protocol Single {
+    associatedtype Value
+    func onReady(_ subscriber: @escaping (Value) -> Void)
+}
 
-// ApplicationWorkflow
-//  - OnboardingWorkflow(ask for user profile, ask for push permissions)
-//  - AuthorizedWorkflow(deeplink, show active rides count)
-//   - ConfirmationViewModel(==)
-//    - AcceptOfferViewModel
-//   - FareViewModel
-
-enum WorkflowState<State, Result> {
+public enum WorkflowState<State, Result> {
     case running(State)
     case finished(Result)
 }
 
-protocol Workflow: WorkflowInput, Single {
+public protocol Workflow: WorkflowInput, Single {
     associatedtype State
     typealias CompleteState = WorkflowState<State, Value>
 
@@ -33,12 +27,12 @@ extension Workflow where Value == Never {
     }
 }
 
-protocol WorkflowInput {
+public protocol WorkflowInput {
     associatedtype Event
     func send(event: Event)
 }
 
-extension WorkflowState where Result == Never {
+public extension WorkflowState where Result == Never {
     var unwrapped: State {
         switch self {
         case let .running(state): return state

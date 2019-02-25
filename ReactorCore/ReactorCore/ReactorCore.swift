@@ -2,7 +2,7 @@ import Foundation
 import ReactiveSwift
 import Result
 
-protocol Reactor: class, Workflow, SingleLike {
+public protocol Reactor: class, Workflow, SingleLike {
     func react(
         to state: State
     ) -> Reaction<Event, State, Value>
@@ -15,12 +15,12 @@ protocol Reactor: class, Workflow, SingleLike {
     ) -> Reaction<Event, State, Value>
 }
 
-class ReactorCore<E, S, R>: Reactor {
-    typealias Event = E
-    typealias State = S
-    typealias Value = R
+open class ReactorCore<E, S, R>: Reactor {
+    public typealias Event = E
+    public typealias State = S
+    public typealias Value = R
 
-    init(initialState: S, scheduler: QueueScheduler = QueueScheduler(name: "ReactorCore.Scheduler")) {
+    public init(initialState: S, scheduler: QueueScheduler = QueueScheduler(name: "ReactorCore.Scheduler")) {
         self.scheduler = scheduler
         mutableState = MutableProperty(CompleteState.running(initialState))
         state = Property(capturing: mutableState)
@@ -29,15 +29,15 @@ class ReactorCore<E, S, R>: Reactor {
 
     private var launched: Bool = false
     private let mutableState: MutableProperty<CompleteState>
-    let state: Property<CompleteState>
+    public let state: Property<CompleteState>
 
-    func react(
+    open func react(
         to _: S
     ) -> Reaction<E, S, R> {
         fatalError()
     }
 
-    func launch() {
+    public func launch() {
         if !launched {
             launched = true
 
@@ -54,7 +54,7 @@ class ReactorCore<E, S, R>: Reactor {
 
     private let eventQueue: ValueQueue<E>
 
-    func send(event: E) {
+    public func send(event: E) {
         eventQueue.enqueue(event)
     }
 
@@ -104,15 +104,15 @@ class ReactorCore<E, S, R>: Reactor {
 
     // MARK: - Build Reactions
 
-    let scheduler: QueueScheduler
+    public let scheduler: QueueScheduler
 
-    func buildReaction(
+    public func buildReaction(
         _ builderBlock: (ReactionBuilder<Event, State, Value>) -> Void
     ) -> Reaction<Event, State, Value> {
         return Reaction(scheduler: scheduler, eventQueue: eventQueue, builderBlock)
     }
 
-    func buildEventReaction(
+    public func buildEventReaction(
         _ mapper: @escaping (Event) -> StateTransition<State, Value>?
     ) -> Reaction<Event, State, Value> {
         return Reaction(scheduler: scheduler, eventQueue: eventQueue) { when in

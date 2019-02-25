@@ -3,12 +3,15 @@ PODS:
     - ReactiveSwift (~> 4.0)
   - ReactiveSwift (4.0.0):
     - Result (~> 4.0)
+  - ReactorCore (0.0.1):
+    - ReactiveSwift (~> 4.0.0)
   - Result (4.1.0)
   - SwiftFormat/CLI (0.38.0)
 
 DEPENDENCIES:
   - ReactiveCocoa
   - ReactiveSwift
+  - ReactorCore (from `./ReactorCore`)
   - SwiftFormat/CLI
 
 SPEC REPOS:
@@ -18,12 +21,17 @@ SPEC REPOS:
     - Result
     - SwiftFormat
 
+EXTERNAL SOURCES:
+  ReactorCore:
+    :path: "./ReactorCore"
+
 SPEC CHECKSUMS:
   ReactiveCocoa: fbd26e9ba60e98417ee47433e59465a98ed9da0f
   ReactiveSwift: a2bb9ace428a109e9c0209615645d9d286c8c433
+  ReactorCore: d1646fdd14175e85059f4811eb56911645c9c904
   Result: bd966fac789cc6c1563440b348ab2598cc24d5c7
   SwiftFormat: 0762bc591b9f6e8efa99402e714a03ede5151656
 
-PODFILE CHECKSUM: c3730223ac93758c3f6693c46681bb6f80baff71
+PODFILE CHECKSUM: f8a2777996520263452833c75e5856a0ad725f33
 
 COCOAPODS: 1.5.3

@@ -7,6 +7,8 @@ target 'Workflows' do
 
   pod 'ReactiveSwift'
   pod 'ReactiveCocoa'
+  
+  pod 'ReactorCore', :path => './ReactorCore'
 
   pod 'SwiftFormat/CLI'
 

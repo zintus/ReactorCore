@@ -1,6 +1,7 @@
 import Foundation
 import ReactiveSwift
 import Result
+import ReactorCore
 
 class ButtonViewModel: ReactorCore<ButtonViewModel.Event, ButtonViewModel.ViewState, Never> {
     enum Event {

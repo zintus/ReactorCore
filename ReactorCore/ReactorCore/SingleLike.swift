@@ -2,14 +2,14 @@ import Foundation
 import ReactiveSwift
 import Result
 
-protocol SingleLike {
+public protocol SingleLike {
     associatedtype State
     associatedtype Value
     var state: Property<WorkflowState<State, Value>> { get }
 }
 
 extension SingleLike {
-    func onReady(_ continuation: @escaping (Value) -> Void) {
+    public func onReady(_ continuation: @escaping (Value) -> Void) {
         state
             .producer
             .flatMap(.concat) { state -> SignalProducer<Value, NoError> in

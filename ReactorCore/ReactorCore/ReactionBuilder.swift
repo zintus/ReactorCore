@@ -2,7 +2,7 @@ import Foundation
 import ReactiveSwift
 import Result
 
-class ValueQueue<Value> {
+public class ValueQueue<Value> {
     private let scheduler: QueueScheduler
     init(_ scheduler: QueueScheduler) {
         self.scheduler = scheduler
@@ -78,7 +78,7 @@ class ValueQueue<Value> {
     }
 }
 
-class ReactionBuilder<Event, State, Value> {
+public class ReactionBuilder<Event, State, Value> {
     private let scheduler: QueueScheduler
     private let eventQueue: ValueQueue<Event>
 
@@ -120,7 +120,7 @@ class ReactionBuilder<Event, State, Value> {
         self.eventQueue = eventQueue
     }
     
-    func workflowUpdatedFlatMap<W: Workflow>(
+    public func workflowUpdatedFlatMap<W: Workflow>(
         _ handle: WorkflowHandle<W>,
         mapper: @escaping (WorkflowHandle<W>) -> SignalProducer<StateTransition<State, Value>?, NoError>
         ) {
@@ -155,7 +155,7 @@ class ReactionBuilder<Event, State, Value> {
         self.awaitingNexts = nexts + [nextState]
     }
     
-    func receivedFlatMap(_ mapper: @escaping (Event) -> SignalProducer<StateTransition<State, Value>?, NoError>) {
+    public func receivedFlatMap(_ mapper: @escaping (Event) -> SignalProducer<StateTransition<State, Value>?, NoError>) {
         guard awaitingNexts != nil else {
             // Someone already computed next state
             return
@@ -216,11 +216,11 @@ private class WorkflowStateTracker<W: Workflow> {
     }
 }
 
-class WorkflowHandle<W: Workflow> {
+public class WorkflowHandle<W: Workflow> {
     private let workflow: W
     private let stateTracker: WorkflowStateTracker<W>
     
-    init(_ workflow: W, scheduler: QueueScheduler) {
+    public init(_ workflow: W, scheduler: QueueScheduler) {
         self.workflow = workflow
         let tracker = WorkflowStateTracker(workflow: workflow, scheduler: scheduler)
         stateTracker = tracker
@@ -235,9 +235,9 @@ class WorkflowHandle<W: Workflow> {
         self.state = state
     }
     
-    let state: W.CompleteState
+    public let state: W.CompleteState
     
-    func send(event: W.Event) {
+    public func send(event: W.Event) {
         workflow.send(event: event)
     }
     
@@ -252,7 +252,7 @@ class WorkflowHandle<W: Workflow> {
 
 // WARN: Don't edit this, copy paste from above
 extension ReactionBuilder {
-    func workflowUpdated<W: Workflow>(
+    public func workflowUpdated<W: Workflow>(
         _ handle: WorkflowHandle<W>,
         mapper: @escaping (WorkflowHandle<W>) -> StateTransition<State, Value>?
         ) {
@@ -276,7 +276,7 @@ extension ReactionBuilder {
         self.awaitingNexts = nexts + [nextState]
     }
     
-    func received(_ mapper: @escaping (Event) -> StateTransition<State, Value>?) {
+    public func received(_ mapper: @escaping (Event) -> StateTransition<State, Value>?) {
         guard awaitingNexts != nil else {
             // Someone already computed next state
             return

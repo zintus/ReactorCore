@@ -1,6 +1,7 @@
 import Foundation
 import ReactiveSwift
 import Result
+import ReactorCore
 
 class MyViewModel: ReactorCore<MyViewModel.Event, MyViewModel.ViewState, ()> {
     struct ViewState {

@@ -1,6 +1,7 @@
 import Foundation
 import ReactiveSwift
 import Result
+import ReactorCore
 
 class NetworkedButton: ReactorCore<NetworkedButton.Event, NetworkedButton.State, Never> {
     enum State {

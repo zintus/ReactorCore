@@ -1,6 +1,7 @@
 import Foundation
 import ReactiveSwift
 import Result
+import ReactorCore
 
 func loadImage(url: String) -> SignalProducer<UIImage?, NoError> {
     return SignalProducer { observer, _ in
