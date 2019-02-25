@@ -11,7 +11,7 @@ class Aggregator: ReactorCore<Aggregator.Event, Aggregator.State, Never> {
     struct State {
         let counter: Int
 
-        let children: [WorkflowHandle2<Aggregator>]
+        let children: [WorkflowHandle<Aggregator>]
 
         var total: Int {
             return counter + children.reduce(into: 0) { $0 = $0 + $1.state.unwrapped.counter }
@@ -21,14 +21,14 @@ class Aggregator: ReactorCore<Aggregator.Event, Aggregator.State, Never> {
             return State(counter: counter, children: children)
         }
 
-        func with(children: [WorkflowHandle2<Aggregator>]) -> State {
+        func with(children: [WorkflowHandle<Aggregator>]) -> State {
             return State(counter: counter, children: children)
         }
     }
 
     init(_ children: [Aggregator]) {
         let scheduler = QueueScheduler(name: "Aggregator.scheduler")
-        super.init(initialState: .init(counter: 0, children: children.map { WorkflowHandle2($0, scheduler: scheduler) }), scheduler: scheduler)
+        super.init(initialState: .init(counter: 0, children: children.map { WorkflowHandle($0, scheduler: scheduler) }), scheduler: scheduler)
     }
 
     override func react(to state: State) -> Reaction<Event, State, Never> {

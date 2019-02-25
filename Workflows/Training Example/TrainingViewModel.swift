@@ -22,10 +22,10 @@ class TrainingViewModel: ReactorCore<TrainingViewModel.Event, TrainingViewModel.
 
     struct OverallState {
         let counter: Int
-        let imageLoader: WorkflowHandle2<ImageLoader>?
+        let imageLoader: WorkflowHandle<ImageLoader>?
         let labelState: LabelState
         let textFieldState: TextFieldState
-        fileprivate let button1State: WorkflowHandle2<ButtonViewModel>
+        fileprivate let button1State: WorkflowHandle<ButtonViewModel>
         var buttonState: ButtonViewModel.State {
             return button1State.state.unwrapped.withCounter(counter)
         }
@@ -35,7 +35,7 @@ class TrainingViewModel: ReactorCore<TrainingViewModel.Event, TrainingViewModel.
                                 imageLoader: nil,
                                 labelState: .placeholder,
                                 textFieldState: .error,
-                                button1State: WorkflowHandle2(ButtonViewModel(), scheduler: scheduler))
+                                button1State: WorkflowHandle(ButtonViewModel(), scheduler: scheduler))
         }
 
         fileprivate func with(counter: Int) -> OverallState {
@@ -58,7 +58,7 @@ class TrainingViewModel: ReactorCore<TrainingViewModel.Event, TrainingViewModel.
             return self
         }
 
-        fileprivate func withImageLoader(_ loader: WorkflowHandle2<ImageLoader>) -> OverallState {
+        fileprivate func withImageLoader(_ loader: WorkflowHandle<ImageLoader>) -> OverallState {
             return OverallState(counter: counter,
                                 imageLoader: loader,
                                 labelState: labelState,
@@ -74,7 +74,7 @@ class TrainingViewModel: ReactorCore<TrainingViewModel.Event, TrainingViewModel.
             return false
         }
 
-        fileprivate func withButton(_ button: WorkflowHandle2<ButtonViewModel>) -> OverallState {
+        fileprivate func withButton(_ button: WorkflowHandle<ButtonViewModel>) -> OverallState {
             return OverallState(counter: counter,
                                 imageLoader: imageLoader,
                                 labelState: labelState,
@@ -100,7 +100,7 @@ class TrainingViewModel: ReactorCore<TrainingViewModel.Event, TrainingViewModel.
                 case let .loadImage(url):
                     state.button1State.send(event: .imageIsLoading(true))
                     let workflow = loadImageWorkflow(url: url)
-                    let imageLoadingHandle = WorkflowHandle2(workflow, scheduler: self.scheduler)
+                    let imageLoadingHandle = WorkflowHandle(workflow, scheduler: self.scheduler)
                     return .enterState(state.withImageLoader(imageLoadingHandle))
 
                 case let .textInput(text):

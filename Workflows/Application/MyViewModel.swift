@@ -4,8 +4,8 @@ import Result
 
 class MyViewModel: ReactorCore<MyViewModel.Event, MyViewModel.ViewState, ()> {
     struct ViewState {
-        let leftButton: WorkflowHandle2<NetworkedButton>
-        let rightButton: WorkflowHandle2<NetworkedButton>
+        let leftButton: WorkflowHandle<NetworkedButton>
+        let rightButton: WorkflowHandle<NetworkedButton>
     }
 
     enum Event {
@@ -17,8 +17,8 @@ class MyViewModel: ReactorCore<MyViewModel.Event, MyViewModel.ViewState, ()> {
     init() {
         let scheduler = QueueScheduler(name: "MyViewModel.scheduler")
         super.init(initialState: ViewState(
-            leftButton: WorkflowHandle2(NetworkedButton(), scheduler: scheduler),
-            rightButton: WorkflowHandle2(NetworkedButton(), scheduler: scheduler)
+            leftButton: WorkflowHandle(NetworkedButton(), scheduler: scheduler),
+            rightButton: WorkflowHandle(NetworkedButton(), scheduler: scheduler)
         ),
                    scheduler: scheduler)
     }

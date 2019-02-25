@@ -13,7 +13,7 @@
 		C07A192A220454CF00AFE6E7 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C07A1929220454CF00AFE6E7 /* Assets.xcassets */; };
 		C07A192D220454CF00AFE6E7 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C07A192B220454CF00AFE6E7 /* LaunchScreen.storyboard */; };
 		C0B3A441220C6BBC009B10ED /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C0B3A440220C6BBC009B10ED /* Main.storyboard */; };
-		C0C41F142222867500CAA92C /* Reaction2.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0C41F132222867500CAA92C /* Reaction2.swift */; };
+		C0C41F142222867500CAA92C /* ReactionBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0C41F132222867500CAA92C /* ReactionBuilder.swift */; };
 		C0D133FA2211D689007AB332 /* ValueQueueTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0D133F92211D689007AB332 /* ValueQueueTests.swift */; };
 		C0D134022211DD58007AB332 /* Lock.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0D134012211DD58007AB332 /* Lock.swift */; };
 		D280583B374E2BA98DE1B008 /* Pods_WorkflowsTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 180DBB4D4D484500A4AA73A0 /* Pods_WorkflowsTests.framework */; };
@@ -62,7 +62,7 @@
 		C07A192C220454CF00AFE6E7 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		C07A192E220454CF00AFE6E7 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		C0B3A440220C6BBC009B10ED /* Main.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Main.storyboard; sourceTree = "<group>"; };
-		C0C41F132222867500CAA92C /* Reaction2.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Reaction2.swift; sourceTree = "<group>"; };
+		C0C41F132222867500CAA92C /* ReactionBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReactionBuilder.swift; sourceTree = "<group>"; };
 		C0D133F72211D689007AB332 /* WorkflowsTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = WorkflowsTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		C0D133F92211D689007AB332 /* ValueQueueTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ValueQueueTests.swift; sourceTree = "<group>"; };
 		C0D133FB2211D689007AB332 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -189,7 +189,7 @@
 				D62AAC533E980DA3100601E8 /* SingleLike.swift */,
 				D62AAC284B8905FB110E2112 /* Reaction.swift */,
 				C0D134012211DD58007AB332 /* Lock.swift */,
-				C0C41F132222867500CAA92C /* Reaction2.swift */,
+				C0C41F132222867500CAA92C /* ReactionBuilder.swift */,
 			);
 			path = Library;
 			sourceTree = "<group>";
@@ -416,7 +416,7 @@
 				D62AA1C17A0E5EBFD22BF802 /* Single.swift in Sources */,
 				D62AAB7AA8F4A0528212A2EF /* Workflow.swift in Sources */,
 				D62AAE643F317B1820C3A8BB /* ReactorCore.swift in Sources */,
-				C0C41F142222867500CAA92C /* Reaction2.swift in Sources */,
+				C0C41F142222867500CAA92C /* ReactionBuilder.swift in Sources */,
 				D62AAE90311DB0CBBBD194B3 /* NetworkedButton.swift in Sources */,
 				D62AA887DF4608E267D2BF3D /* ReadonlyWorkflow.swift in Sources */,
 				D62AAC4403F985B17D4AA1CC /* SingleLike.swift in Sources */,

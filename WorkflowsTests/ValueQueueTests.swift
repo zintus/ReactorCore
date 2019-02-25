@@ -1,49 +1,55 @@
 @testable import Workflows
 import XCTest
+import ReactiveSwift
 
 private extension ValueQueue {
     var getUnsafe: Value {
-        let nextValue2 = nextValue()
-        let result = nextValue2.producer
-            .on { _ in
-                nextValue2.consume()
-            }
-            .take(first: 1)
-            .single()!.value!
+        let nextValue2 = dequeue()
+        var result: Value!
+        nextValue2.onValue = { newValue in
+            result = newValue
+        }
         return result
     }
 }
 
 class ValueQueueTests: XCTestCase {
     func testEventsBeforeRequestQueue() {
-        let queue = ValueQueue<Int>()
+        let scheduler = QueueScheduler(name: "Test")
+        let queue = ValueQueue<Int>(scheduler)
         queue.enqueue(1)
         queue.enqueue(2)
 
-        XCTAssert(queue.getUnsafe == 1)
-        XCTAssert(queue.getUnsafe == 2)
+        scheduler.queue.sync {
+            XCTAssert(queue.getUnsafe == 1)
+            XCTAssert(queue.getUnsafe == 2)
+        }
     }
 
     func testEventAfterRequest() {
-        let queue = ValueQueue<Int>()
+        let scheduler = QueueScheduler(name: "Test")
+        let queue = ValueQueue<Int>(scheduler)
 
-        DispatchQueue(label: "Test").async {
+        let dispatchGroup = DispatchGroup()
+        DispatchQueue(label: "Test").async(group: dispatchGroup) {
             queue.enqueue(1)
-            DispatchQueue(label: "Test2").async {
+            DispatchQueue(label: "Test2").async(group: dispatchGroup) {
                 queue.enqueue(2)
             }
         }
+        dispatchGroup.wait()
 
-        XCTAssert(queue.getUnsafe == 1)
-        XCTAssert(queue.getUnsafe == 2)
+        scheduler.queue.sync {
+            XCTAssert(queue.getUnsafe == 1)
+            XCTAssert(queue.getUnsafe == 2)
+        }
     }
 
-    // FIXME: if queues are full, interrupt won't come through it
-    // On my mac queues count happen to be 68
     func testContendedQueue() {
-        let count = 50
+        let scheduler = QueueScheduler(name: "Test")
+        let count = 10000
 
-        let queue = ValueQueue<Int>()
+        let queue = ValueQueue<Int>(scheduler)
 
         let dQueue = DispatchQueue(label: "Test Queue")
         for i in 1 ... count {
@@ -56,44 +62,14 @@ class ValueQueueTests: XCTestCase {
         let dispatchGroup = DispatchGroup()
         for _ in 1 ..< count {
             concurrent.async(group: dispatchGroup) {
-                _ = queue.getUnsafe
+                scheduler.queue.sync { _ = queue.getUnsafe }
             }
         }
 
         dispatchGroup.wait()
 
-        let value = queue.getUnsafe
+        let value = scheduler.queue.sync { queue.getUnsafe }
         print(value)
         XCTAssert(value == count)
-    }
-
-    func skipped_testInsequentialDisposal() {
-        let queue = ValueQueue<Int>()
-
-        var recievedValue: Int?
-
-        let next1 = queue.nextValue().producer
-            .on { value in
-                print("first recieved \(value)")
-                recievedValue = value
-            }
-            .start()
-        let next2 = queue.nextValue().producer.start()
-        let next3 = queue.nextValue().producer.start()
-
-        queue.enqueue(1)
-        next3.dispose()
-
-        queue.enqueue(2)
-        next2.dispose()
-
-        queue.enqueue(3)
-        // This must deadlock, because next1 is still alive
-        let got = queue.getUnsafe
-        XCTAssert(got == 3)
-        print(got)
-
-        next1.dispose()
-        XCTAssert(recievedValue == 1)
     }
 }

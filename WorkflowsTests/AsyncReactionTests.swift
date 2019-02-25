@@ -25,11 +25,11 @@ private class FastAndSlow: ReactorCore<FastAndSlow.Event, FastAndSlow.State, Nev
     }
     
     override init(initialState: State, scheduler: QueueScheduler = QueueScheduler(name: "QueueScheduler.FastAndSlow")) {
-        otherSource = WorkflowHandle2(Minimal(initialState: .init()), scheduler: scheduler)
+        otherSource = WorkflowHandle(Minimal(initialState: .init()), scheduler: scheduler)
         super.init(initialState: initialState, scheduler: scheduler)
     }
 
-    private let otherSource: WorkflowHandle2<Minimal>
+    private let otherSource: WorkflowHandle<Minimal>
 
     override func react(
         to state: State
@@ -38,7 +38,7 @@ private class FastAndSlow: ReactorCore<FastAndSlow.Event, FastAndSlow.State, Nev
             return buildReaction { _ in }
         }
 
-        return buildReaction { (when: ReactionBuilder2<Event, State, Never>) in
+        return buildReaction { (when: ReactionBuilder<Event, State, Never>) in
             // This option wins
             when.receivedFlatMap { event in
                 SignalProducer(value: .enterState(State(event: event)))

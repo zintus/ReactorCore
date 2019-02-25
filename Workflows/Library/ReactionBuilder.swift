@@ -2,7 +2,7 @@ import Foundation
 import ReactiveSwift
 import Result
 
-class ValueQueue2<Value> {
+class ValueQueue<Value> {
     private let scheduler: QueueScheduler
     init(_ scheduler: QueueScheduler) {
         self.scheduler = scheduler
@@ -43,7 +43,7 @@ class ValueQueue2<Value> {
             }
         }
         
-        private let queue: ValueQueue2<Value>
+        private let queue: ValueQueue<Value>
         
         private func tryToConsume() {
             if let value = value, let onValue = onValue {
@@ -52,7 +52,7 @@ class ValueQueue2<Value> {
             }
         }
         
-        init(value: Value?, queue: ValueQueue2<Value>) {
+        init(value: Value?, queue: ValueQueue<Value>) {
             self.value = value
             self.queue = queue
         }
@@ -78,9 +78,9 @@ class ValueQueue2<Value> {
     }
 }
 
-class ReactionBuilder2<Event, State, Value> {
+class ReactionBuilder<Event, State, Value> {
     private let scheduler: QueueScheduler
-    private let eventQueue: ValueQueue2<Event>
+    private let eventQueue: ValueQueue<Event>
 
     private var awaitingNexts: [AnyObject]? = []
     let futureState = FutureState()
@@ -115,14 +115,14 @@ class ReactionBuilder2<Event, State, Value> {
         }
     }
     
-    init(_ scheduler: QueueScheduler, eventQueue: ValueQueue2<Event>) {
+    init(_ scheduler: QueueScheduler, eventQueue: ValueQueue<Event>) {
         self.scheduler = scheduler
         self.eventQueue = eventQueue
     }
     
     func workflowUpdatedFlatMap<W: Workflow>(
-        _ handle: WorkflowHandle2<W>,
-        mapper: @escaping (WorkflowHandle2<W>) -> SignalProducer<StateTransition<State, Value>?, NoError>
+        _ handle: WorkflowHandle<W>,
+        mapper: @escaping (WorkflowHandle<W>) -> SignalProducer<StateTransition<State, Value>?, NoError>
         ) {
         guard awaitingNexts != nil else {
             // Someone already computed next state
@@ -188,12 +188,12 @@ class ReactionBuilder2<Event, State, Value> {
     }
 }
 
-private class WorkflowStateTracker2<W: Workflow> {
+private class WorkflowStateTracker<W: Workflow> {
     private let (lifetime, token) = Lifetime.make()
-    private let stateQueue: ValueQueue2<W.CompleteState>
+    private let stateQueue: ValueQueue<W.CompleteState>
     
     init(workflow: W, scheduler: QueueScheduler) {
-        stateQueue = ValueQueue2(scheduler)
+        stateQueue = ValueQueue(scheduler)
         
         lifetime += workflow.state.signal
             .producer
@@ -204,7 +204,7 @@ private class WorkflowStateTracker2<W: Workflow> {
             .start()
     }
     
-    func firstState() -> ValueQueue2<W.CompleteState>.NextValue {
+    func firstState() -> ValueQueue<W.CompleteState>.NextValue {
         return stateQueue.dequeue()
     }
     
@@ -216,20 +216,20 @@ private class WorkflowStateTracker2<W: Workflow> {
     }
 }
 
-class WorkflowHandle2<W: Workflow> {
+class WorkflowHandle<W: Workflow> {
     private let workflow: W
-    private let stateTracker: WorkflowStateTracker2<W>
+    private let stateTracker: WorkflowStateTracker<W>
     
     init(_ workflow: W, scheduler: QueueScheduler) {
         self.workflow = workflow
-        let tracker = WorkflowStateTracker2(workflow: workflow, scheduler: scheduler)
+        let tracker = WorkflowStateTracker(workflow: workflow, scheduler: scheduler)
         stateTracker = tracker
         state = workflow.state.value
         
         workflow.launch()
     }
     
-    private init(workflow: W, stateTracker: WorkflowStateTracker2<W>, state: W.CompleteState) {
+    private init(workflow: W, stateTracker: WorkflowStateTracker<W>, state: W.CompleteState) {
         self.workflow = workflow
         self.stateTracker = stateTracker
         self.state = state
@@ -241,20 +241,20 @@ class WorkflowHandle2<W: Workflow> {
         workflow.send(event: event)
     }
     
-    fileprivate func toNextState() -> ValueQueue2<W.CompleteState>.NextValue {
+    fileprivate func toNextState() -> ValueQueue<W.CompleteState>.NextValue {
         return stateTracker.firstState()
     }
     
-    func withState(_ state: W.CompleteState) -> WorkflowHandle2<W> {
-        return WorkflowHandle2(workflow: workflow, stateTracker: stateTracker, state: state)
+    func withState(_ state: W.CompleteState) -> WorkflowHandle<W> {
+        return WorkflowHandle(workflow: workflow, stateTracker: stateTracker, state: state)
     }
 }
 
 // WARN: Don't edit this, copy paste from above
-extension ReactionBuilder2 {
+extension ReactionBuilder {
     func workflowUpdated<W: Workflow>(
-        _ handle: WorkflowHandle2<W>,
-        mapper: @escaping (WorkflowHandle2<W>) -> StateTransition<State, Value>?
+        _ handle: WorkflowHandle<W>,
+        mapper: @escaping (WorkflowHandle<W>) -> StateTransition<State, Value>?
         ) {
         guard awaitingNexts != nil else {
             // Someone already computed next state
