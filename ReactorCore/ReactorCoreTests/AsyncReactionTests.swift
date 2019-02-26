@@ -1,7 +1,7 @@
 import Foundation
 import ReactiveSwift
+import ReactorCore
 import Result
-@testable import Workflows
 import XCTest
 
 private class Minimal: ReactorCore<Minimal.Event, Minimal.State, Never> {
@@ -23,7 +23,7 @@ private class FastAndSlow: ReactorCore<FastAndSlow.Event, FastAndSlow.State, Nev
     struct State {
         let event: Event?
     }
-    
+
     override init(initialState: State, scheduler: QueueScheduler = QueueScheduler(name: "QueueScheduler.FastAndSlow")) {
         otherSource = WorkflowHandle(Minimal(initialState: .init()), scheduler: scheduler)
         super.init(initialState: initialState, scheduler: scheduler)

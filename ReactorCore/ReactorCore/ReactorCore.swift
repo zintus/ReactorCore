@@ -77,24 +77,24 @@ open class ReactorCore<E, S, R>: Reactor {
 
         let result: SignalProducer<CompleteState, NoError> = SignalProducer { [weak self] observer, lifetime in
             var currentState = CompleteState.running(initialState)
-            
+
             var subscribeNextState: (() -> Void)!
-            
+
             subscribeNextState = { [weak self] in
                 guard let self = self else { return }
-                
+
                 lifetime += self.scheduler.schedule {
                     lifetime += continueStateStream(currentState)
                         .on { nextState in
                             currentState = nextState
                             observer.send(value: nextState)
-                            
+
                             subscribeNextState()
                         }
                         .start()
                 }
             }
-            
+
             subscribeNextState()
         }
 
@@ -132,7 +132,7 @@ private extension StateTransition {
 }
 
 extension Reactor where Value == Never {
-    var unwrappedState: Property<State> {
+    public var unwrappedState: Property<State> {
         return state.map { $0.unwrapped }
     }
 }

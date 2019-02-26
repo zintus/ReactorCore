@@ -1,7 +1,7 @@
 import Foundation
-@testable import Workflows
-import XCTest
 import ReactiveSwift
+@testable import ReactorCore
+import XCTest
 
 class Aggregator: ReactorCore<Aggregator.Event, Aggregator.State, Never> {
     enum Event {

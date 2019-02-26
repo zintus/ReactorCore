@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		2C28D55EA9A32F0121C97264 /* Pods_ReactorCoreTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F893E602F21828121C38A3E7 /* Pods_ReactorCoreTests.framework */; };
 		C058341C2223DF340070674A /* ReactorCore.h in Headers */ = {isa = PBXBuildFile; fileRef = C058341A2223DF340070674A /* ReactorCore.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		C058342B2223DF720070674A /* ReactorCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C05834172223DF340070674A /* ReactorCore.framework */; };
 		C05834382223E0140070674A /* ReactionBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = C05834322223E0130070674A /* ReactionBuilder.swift */; };
@@ -20,6 +21,7 @@
 		C05834472223E0860070674A /* AsyncReactionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C05834422223E0860070674A /* AsyncReactionTests.swift */; };
 		C05834482223E0860070674A /* SubworkflowTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C05834432223E0860070674A /* SubworkflowTests.swift */; };
 		C05834492223E0860070674A /* RegisterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C05834442223E0860070674A /* RegisterTests.swift */; };
+		E096E98A144A0C3F85E9D02D /* Pods_ReactorCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3B6518276610943D903C9CB4 /* Pods_ReactorCore.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -33,6 +35,11 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		2025A1C13FB9F0F74883B620 /* Pods-ReactorCoreTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ReactorCoreTests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-ReactorCoreTests/Pods-ReactorCoreTests.debug.xcconfig"; sourceTree = "<group>"; };
+		287CDADEBD2D3C6E8D62FA41 /* Pods-ReactorCore.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ReactorCore.release.xcconfig"; path = "Pods/Target Support Files/Pods-ReactorCore/Pods-ReactorCore.release.xcconfig"; sourceTree = "<group>"; };
+		3B6518276610943D903C9CB4 /* Pods_ReactorCore.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_ReactorCore.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		551AD8EDAFF38D1A540C5F96 /* Pods-ReactorCore.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ReactorCore.debug.xcconfig"; path = "Pods/Target Support Files/Pods-ReactorCore/Pods-ReactorCore.debug.xcconfig"; sourceTree = "<group>"; };
+		648906C2A59673BD4A51AED6 /* Pods-ReactorCoreTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ReactorCoreTests.release.xcconfig"; path = "Pods/Target Support Files/Pods-ReactorCoreTests/Pods-ReactorCoreTests.release.xcconfig"; sourceTree = "<group>"; };
 		C05834172223DF340070674A /* ReactorCore.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = ReactorCore.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		C058341A2223DF340070674A /* ReactorCore.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ReactorCore.h; sourceTree = "<group>"; };
 		C058341B2223DF340070674A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -50,6 +57,7 @@
 		C05834432223E0860070674A /* SubworkflowTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SubworkflowTests.swift; sourceTree = "<group>"; };
 		C05834442223E0860070674A /* RegisterTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RegisterTests.swift; sourceTree = "<group>"; };
 		C058344B2223E1270070674A /* Pods_Workflows.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = Pods_Workflows.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		F893E602F21828121C38A3E7 /* Pods_ReactorCoreTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_ReactorCoreTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -57,6 +65,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E096E98A144A0C3F85E9D02D /* Pods_ReactorCore.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -65,12 +74,24 @@
 			buildActionMask = 2147483647;
 			files = (
 				C058342B2223DF720070674A /* ReactorCore.framework in Frameworks */,
+				2C28D55EA9A32F0121C97264 /* Pods_ReactorCoreTests.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		7209358DCC7963C89BE3CE73 /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				551AD8EDAFF38D1A540C5F96 /* Pods-ReactorCore.debug.xcconfig */,
+				287CDADEBD2D3C6E8D62FA41 /* Pods-ReactorCore.release.xcconfig */,
+				2025A1C13FB9F0F74883B620 /* Pods-ReactorCoreTests.debug.xcconfig */,
+				648906C2A59673BD4A51AED6 /* Pods-ReactorCoreTests.release.xcconfig */,
+			);
+			name = Pods;
+			sourceTree = "<group>";
+		};
 		C058340D2223DF340070674A = {
 			isa = PBXGroup;
 			children = (
@@ -78,6 +99,7 @@
 				C05834272223DF720070674A /* ReactorCoreTests */,
 				C05834182223DF340070674A /* Products */,
 				C058344A2223E1270070674A /* Frameworks */,
+				7209358DCC7963C89BE3CE73 /* Pods */,
 			);
 			sourceTree = "<group>";
 		};
@@ -122,6 +144,8 @@
 			isa = PBXGroup;
 			children = (
 				C058344B2223E1270070674A /* Pods_Workflows.framework */,
+				3B6518276610943D903C9CB4 /* Pods_ReactorCore.framework */,
+				F893E602F21828121C38A3E7 /* Pods_ReactorCoreTests.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -144,6 +168,8 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = C058341F2223DF340070674A /* Build configuration list for PBXNativeTarget "ReactorCore" */;
 			buildPhases = (
+				5140003170337B4A777F84F2 /* [CP] Check Pods Manifest.lock */,
+				C06D5B252225180B0050878E /* SwiftFormat */,
 				C05834122223DF340070674A /* Headers */,
 				C05834132223DF340070674A /* Sources */,
 				C05834142223DF340070674A /* Frameworks */,
@@ -162,9 +188,11 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = C058342E2223DF720070674A /* Build configuration list for PBXNativeTarget "ReactorCoreTests" */;
 			buildPhases = (
+				A1F4FE20582B2461252C1628 /* [CP] Check Pods Manifest.lock */,
 				C05834222223DF720070674A /* Sources */,
 				C05834232223DF720070674A /* Frameworks */,
 				C05834242223DF720070674A /* Resources */,
+				3FDAC4849A1C245CE32C90E2 /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -227,6 +255,95 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		3FDAC4849A1C245CE32C90E2 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${SRCROOT}/Pods/Target Support Files/Pods-ReactorCoreTests/Pods-ReactorCoreTests-frameworks.sh",
+				"${BUILT_PRODUCTS_DIR}/ReactiveSwift/ReactiveSwift.framework",
+				"${BUILT_PRODUCTS_DIR}/Result/Result.framework",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/ReactiveSwift.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Result.framework",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-ReactorCoreTests/Pods-ReactorCoreTests-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		5140003170337B4A777F84F2 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-ReactorCore-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		A1F4FE20582B2461252C1628 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-ReactorCoreTests-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		C06D5B252225180B0050878E /* SwiftFormat */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = SwiftFormat;
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "source \"${SRCROOT}\"/scripts/swiftformat.sh\n";
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		C05834132223DF340070674A /* Sources */ = {
@@ -389,6 +506,7 @@
 		};
 		C05834202223DF340070674A /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 551AD8EDAFF38D1A540C5F96 /* Pods-ReactorCore.debug.xcconfig */;
 			buildSettings = {
 				CODE_SIGN_IDENTITY = "";
 				CODE_SIGN_STYLE = Automatic;
@@ -413,6 +531,7 @@
 		};
 		C05834212223DF340070674A /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 287CDADEBD2D3C6E8D62FA41 /* Pods-ReactorCore.release.xcconfig */;
 			buildSettings = {
 				CODE_SIGN_IDENTITY = "";
 				CODE_SIGN_STYLE = Automatic;
@@ -437,8 +556,8 @@
 		};
 		C058342F2223DF720070674A /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 2025A1C13FB9F0F74883B620 /* Pods-ReactorCoreTests.debug.xcconfig */;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				INFOPLIST_FILE = ReactorCoreTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -455,8 +574,8 @@
 		};
 		C05834302223DF720070674A /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 648906C2A59673BD4A51AED6 /* Pods-ReactorCoreTests.release.xcconfig */;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				INFOPLIST_FILE = ReactorCoreTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (

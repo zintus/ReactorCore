@@ -1,6 +1,6 @@
-@testable import Workflows
-import XCTest
 import ReactiveSwift
+@testable import ReactorCore
+import XCTest
 
 private extension ValueQueue {
     var getUnsafe: Value {

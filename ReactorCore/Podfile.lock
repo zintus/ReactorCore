@@ -1,0 +1,24 @@
+PODS:
+  - ReactiveSwift (4.0.0):
+    - Result (~> 4.0)
+  - Result (4.1.0)
+  - SwiftFormat/CLI (0.38.0)
+
+DEPENDENCIES:
+  - ReactiveSwift
+  - SwiftFormat/CLI
+
+SPEC REPOS:
+  https://github.com/cocoapods/specs.git:
+    - ReactiveSwift
+    - Result
+    - SwiftFormat
+
+SPEC CHECKSUMS:
+  ReactiveSwift: a2bb9ace428a109e9c0209615645d9d286c8c433
+  Result: bd966fac789cc6c1563440b348ab2598cc24d5c7
+  SwiftFormat: 0762bc591b9f6e8efa99402e714a03ede5151656
+
+PODFILE CHECKSUM: bed0208529529b2e35fc3e52604a9fc21b96373c
+
+COCOAPODS: 1.5.3
