@@ -80,7 +80,7 @@ public class ValueQueue<Value> {
 
 public class ReactionBuilder<Event, State, Value> {
     private let scheduler: QueueScheduler
-    private let eventQueue: ValueQueue<Event>
+    private let eventQueue: ValueQueue<(Event, DispatchSemaphore?)>
 
     private var awaitingNexts: [AnyObject]? = []
     let futureState = FutureState()
@@ -88,7 +88,8 @@ public class ReactionBuilder<Event, State, Value> {
     private let (lifetime, token) = Lifetime.make()
 
     class FutureState {
-        var onValue: ((StateTransition<State, Value>) -> Void)? {
+        typealias ValueAndSemaphore = (StateTransition<State, Value>, DispatchSemaphore?)
+        var onValue: ((ValueAndSemaphore) -> Void)? {
             didSet {
                 if oldValue != nil {
                     fatalError("Can't set onValue more than once")
@@ -98,7 +99,7 @@ public class ReactionBuilder<Event, State, Value> {
             }
         }
 
-        var value: StateTransition<State, Value>? {
+        var value: ValueAndSemaphore? {
             didSet {
                 if oldValue != nil {
                     fatalError("Can't fill twice")
@@ -115,7 +116,7 @@ public class ReactionBuilder<Event, State, Value> {
         }
     }
 
-    init(_ scheduler: QueueScheduler, eventQueue: ValueQueue<Event>) {
+    init(_ scheduler: QueueScheduler, eventQueue: ValueQueue<(Event, DispatchSemaphore?)>) {
         self.scheduler = scheduler
         self.eventQueue = eventQueue
     }
@@ -144,7 +145,7 @@ public class ReactionBuilder<Event, State, Value> {
                     }
                     guard let self = self else { return }
 
-                    self.futureState.value = transition
+                    self.futureState.value = (transition, nil)
                 }
                 .start()
         }
@@ -166,7 +167,7 @@ public class ReactionBuilder<Event, State, Value> {
 
             self.awaitingNexts = nil
 
-            self.lifetime += mapper(newState)
+            self.lifetime += mapper(newState.0)
                 .take(first: 1)
                 .observe(on: self.scheduler)
                 .on { [weak self] transition in
@@ -176,7 +177,7 @@ public class ReactionBuilder<Event, State, Value> {
 
                     guard let self = self else { return }
 
-                    self.futureState.value = transition
+                    self.futureState.value = (transition, newState.1)
                 }
                 .start()
         }
@@ -267,7 +268,12 @@ extension ReactionBuilder {
             self.awaitingNexts = nil
 
             let newHandle = handle.withState(newState)
-            self.futureState.value = mapper(newHandle)
+
+            guard let transition = mapper(newHandle) else {
+                fatalError("Unhandled transition")
+            }
+
+            self.futureState.value = (transition, nil)
         }
         guard let nexts = awaitingNexts else {
             // Someone already computed next state
@@ -287,7 +293,11 @@ extension ReactionBuilder {
 
             self.awaitingNexts = nil
 
-            self.futureState.value = mapper(newState)
+            guard let transition = mapper(newState.0) else {
+                fatalError("Unhandled transition")
+            }
+
+            self.futureState.value = (transition, newState.1)
         }
         guard let nexts = awaitingNexts else {
             // Someone already computed next state

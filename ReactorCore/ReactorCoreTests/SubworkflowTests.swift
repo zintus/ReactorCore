@@ -33,12 +33,6 @@ class Aggregator: ReactorCore<Aggregator.Event, Aggregator.State, Never> {
 
     override func react(to state: State) -> Reaction<Event, State, Never> {
         return buildReaction { when in
-            when.received { event in
-                switch event {
-                case .inc: return .enterState(state.with(counter: state.counter + 1))
-                }
-            }
-
             for (index, child) in state.children.enumerated() {
                 when.workflowUpdated(child) { handle in
                     var children = state.children
@@ -46,6 +40,12 @@ class Aggregator: ReactorCore<Aggregator.Event, Aggregator.State, Never> {
                     return .enterState(state.with(
                         children: children
                     ))
+                }
+            }
+
+            when.received { event in
+                switch event {
+                case .inc: return .enterState(state.with(counter: state.counter + 1))
                 }
             }
         }

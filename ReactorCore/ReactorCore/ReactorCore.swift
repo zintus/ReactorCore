@@ -1,3 +1,4 @@
+import Dispatch
 import Foundation
 import ReactiveSwift
 import Result
@@ -24,7 +25,7 @@ open class ReactorCore<E, S, R>: Reactor {
         self.scheduler = scheduler
         mutableState = MutableProperty(CompleteState.running(initialState))
         state = Property(capturing: mutableState)
-        eventQueue = ValueQueue<E>(scheduler)
+        eventQueue = ValueQueue<(E, DispatchSemaphore?)>(scheduler)
     }
 
     private var launched: Bool = false
@@ -52,10 +53,16 @@ open class ReactorCore<E, S, R>: Reactor {
         }
     }
 
-    private let eventQueue: ValueQueue<E>
+    private let eventQueue: ValueQueue<(E, DispatchSemaphore?)>
 
     public func send(event: E) {
-        eventQueue.enqueue(event)
+        eventQueue.enqueue((event, nil))
+    }
+
+    public func send(syncEvent event: E) {
+        let semaphore = DispatchSemaphore(value: 0)
+        eventQueue.enqueue((event, semaphore))
+        semaphore.wait()
     }
 
     private func buildState(_ initialState: State) -> Property<WorkflowState<S, R>> {

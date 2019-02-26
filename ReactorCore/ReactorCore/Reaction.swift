@@ -13,14 +13,15 @@ public class Reaction<Event, State, Value> {
 
     public init(
         scheduler: QueueScheduler,
-        eventQueue: ValueQueue<Event>,
+        eventQueue: ValueQueue<(Event, DispatchSemaphore?)>,
         _ builderBlock: (ReactionBuilder<Event, State, Value>) -> Void
     ) {
         let builder = ReactionBuilder<Event, State, Value>(scheduler, eventQueue: eventQueue)
         builderBlock(builder)
         signalProducer = SignalProducer { observer, lifetime in
             builder.futureState.onValue = { value in
-                observer.send(value: value)
+                observer.send(value: value.0)
+                value.1?.signal()
 
                 DispatchQueue.global().async {
                     observer.sendCompleted()

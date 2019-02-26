@@ -130,19 +130,12 @@ class PeformanceTests: XCTestCase {
                 }
             }
 
-            let exp = expectation(description: "finished")
-            parent.unwrappedState
-                .producer
-                .filter { state in
-                    state.total == Consts.count * 2
-                }
-                .take(first: 1)
-                .on(completed: {
-                    exp.fulfill()
-                })
-                .start()
-
-            waitForExpectations(timeout: 15)
+            for child in children {
+                child.send(syncEvent: .inc)
+            }
+            parent.send(syncEvent: .inc)
+            let state = parent.unwrappedState.value
+            XCTAssert(state.total == Consts.count * 2 + (children.count + 1))
         }
     }
 }

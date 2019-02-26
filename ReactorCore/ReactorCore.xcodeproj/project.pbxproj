@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		2C28D55EA9A32F0121C97264 /* Pods_ReactorCoreTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F893E602F21828121C38A3E7 /* Pods_ReactorCoreTests.framework */; };
+		C024B35D22256B050050312C /* SyncEventTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C024B35C22256B050050312C /* SyncEventTests.swift */; };
 		C058341C2223DF340070674A /* ReactorCore.h in Headers */ = {isa = PBXBuildFile; fileRef = C058341A2223DF340070674A /* ReactorCore.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		C058342B2223DF720070674A /* ReactorCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C05834172223DF340070674A /* ReactorCore.framework */; };
 		C05834382223E0140070674A /* ReactionBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = C05834322223E0130070674A /* ReactionBuilder.swift */; };
@@ -41,6 +42,7 @@
 		3B6518276610943D903C9CB4 /* Pods_ReactorCore.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_ReactorCore.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		551AD8EDAFF38D1A540C5F96 /* Pods-ReactorCore.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ReactorCore.debug.xcconfig"; path = "Pods/Target Support Files/Pods-ReactorCore/Pods-ReactorCore.debug.xcconfig"; sourceTree = "<group>"; };
 		648906C2A59673BD4A51AED6 /* Pods-ReactorCoreTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ReactorCoreTests.release.xcconfig"; path = "Pods/Target Support Files/Pods-ReactorCoreTests/Pods-ReactorCoreTests.release.xcconfig"; sourceTree = "<group>"; };
+		C024B35C22256B050050312C /* SyncEventTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SyncEventTests.swift; sourceTree = "<group>"; };
 		C05834172223DF340070674A /* ReactorCore.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = ReactorCore.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		C058341A2223DF340070674A /* ReactorCore.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ReactorCore.h; sourceTree = "<group>"; };
 		C058341B2223DF340070674A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -137,6 +139,7 @@
 				C05834442223E0860070674A /* RegisterTests.swift */,
 				C05834422223E0860070674A /* AsyncReactionTests.swift */,
 				C05834412223E0860070674A /* DeallocationTests.swift */,
+				C024B35C22256B050050312C /* SyncEventTests.swift */,
 				C05834432223E0860070674A /* SubworkflowTests.swift */,
 				C06D5B28222522880050878E /* SubscriptionWorkflowTests.swift */,
 			);
@@ -368,6 +371,7 @@
 			files = (
 				C05834462223E0860070674A /* DeallocationTests.swift in Sources */,
 				C06D5B29222522880050878E /* SubscriptionWorkflowTests.swift in Sources */,
+				C024B35D22256B050050312C /* SyncEventTests.swift in Sources */,
 				C05834482223E0860070674A /* SubworkflowTests.swift in Sources */,
 				C05834452223E0860070674A /* ValueQueueTests.swift in Sources */,
 				C05834492223E0860070674A /* RegisterTests.swift in Sources */,

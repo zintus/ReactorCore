@@ -28,8 +28,6 @@ class DeallocationTests: XCTestCase {
             let register = Register(initialState: .init(register: 0))
             register.send(event: .inc)
             register.launch()
-            self.expect(register.unwrappedState, toBeEqual: Register.State(register: 1))
-            waitForExpectations(timeout: 1)
             registerWeak = register
         }()
 
