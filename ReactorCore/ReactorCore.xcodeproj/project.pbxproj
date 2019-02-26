@@ -13,7 +13,6 @@
 		C05834382223E0140070674A /* ReactionBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = C05834322223E0130070674A /* ReactionBuilder.swift */; };
 		C05834392223E0140070674A /* SingleLike.swift in Sources */ = {isa = PBXBuildFile; fileRef = C05834332223E0130070674A /* SingleLike.swift */; };
 		C058343A2223E0140070674A /* ReactorCore.swift in Sources */ = {isa = PBXBuildFile; fileRef = C05834342223E0130070674A /* ReactorCore.swift */; };
-		C058343B2223E0140070674A /* ReadonlyWorkflow.swift in Sources */ = {isa = PBXBuildFile; fileRef = C05834352223E0140070674A /* ReadonlyWorkflow.swift */; };
 		C058343C2223E0140070674A /* Workflow.swift in Sources */ = {isa = PBXBuildFile; fileRef = C05834362223E0140070674A /* Workflow.swift */; };
 		C058343D2223E0140070674A /* Reaction.swift in Sources */ = {isa = PBXBuildFile; fileRef = C05834372223E0140070674A /* Reaction.swift */; };
 		C05834452223E0860070674A /* ValueQueueTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C05834402223E0860070674A /* ValueQueueTests.swift */; };
@@ -21,6 +20,8 @@
 		C05834472223E0860070674A /* AsyncReactionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C05834422223E0860070674A /* AsyncReactionTests.swift */; };
 		C05834482223E0860070674A /* SubworkflowTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C05834432223E0860070674A /* SubworkflowTests.swift */; };
 		C05834492223E0860070674A /* RegisterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C05834442223E0860070674A /* RegisterTests.swift */; };
+		C06D5B2722251D7B0050878E /* SubscriptionWorkflow.swift in Sources */ = {isa = PBXBuildFile; fileRef = C06D5B2622251D7B0050878E /* SubscriptionWorkflow.swift */; };
+		C06D5B29222522880050878E /* SubscriptionWorkflowTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C06D5B28222522880050878E /* SubscriptionWorkflowTests.swift */; };
 		E096E98A144A0C3F85E9D02D /* Pods_ReactorCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3B6518276610943D903C9CB4 /* Pods_ReactorCore.framework */; };
 /* End PBXBuildFile section */
 
@@ -48,7 +49,6 @@
 		C05834322223E0130070674A /* ReactionBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReactionBuilder.swift; sourceTree = "<group>"; };
 		C05834332223E0130070674A /* SingleLike.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SingleLike.swift; sourceTree = "<group>"; };
 		C05834342223E0130070674A /* ReactorCore.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ReactorCore.swift; sourceTree = "<group>"; };
-		C05834352223E0140070674A /* ReadonlyWorkflow.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ReadonlyWorkflow.swift; sourceTree = "<group>"; };
 		C05834362223E0140070674A /* Workflow.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Workflow.swift; sourceTree = "<group>"; };
 		C05834372223E0140070674A /* Reaction.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Reaction.swift; sourceTree = "<group>"; };
 		C05834402223E0860070674A /* ValueQueueTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ValueQueueTests.swift; sourceTree = "<group>"; };
@@ -57,6 +57,8 @@
 		C05834432223E0860070674A /* SubworkflowTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SubworkflowTests.swift; sourceTree = "<group>"; };
 		C05834442223E0860070674A /* RegisterTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RegisterTests.swift; sourceTree = "<group>"; };
 		C058344B2223E1270070674A /* Pods_Workflows.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = Pods_Workflows.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		C06D5B2622251D7B0050878E /* SubscriptionWorkflow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubscriptionWorkflow.swift; sourceTree = "<group>"; };
+		C06D5B28222522880050878E /* SubscriptionWorkflowTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubscriptionWorkflowTests.swift; sourceTree = "<group>"; };
 		F893E602F21828121C38A3E7 /* Pods_ReactorCoreTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_ReactorCoreTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -119,7 +121,7 @@
 				C058341B2223DF340070674A /* Info.plist */,
 				C05834362223E0140070674A /* Workflow.swift */,
 				C05834342223E0130070674A /* ReactorCore.swift */,
-				C05834352223E0140070674A /* ReadonlyWorkflow.swift */,
+				C06D5B2622251D7B0050878E /* SubscriptionWorkflow.swift */,
 				C05834332223E0130070674A /* SingleLike.swift */,
 				C05834372223E0140070674A /* Reaction.swift */,
 				C05834322223E0130070674A /* ReactionBuilder.swift */,
@@ -136,6 +138,7 @@
 				C05834422223E0860070674A /* AsyncReactionTests.swift */,
 				C05834412223E0860070674A /* DeallocationTests.swift */,
 				C05834432223E0860070674A /* SubworkflowTests.swift */,
+				C06D5B28222522880050878E /* SubscriptionWorkflowTests.swift */,
 			);
 			path = ReactorCoreTests;
 			sourceTree = "<group>";
@@ -350,9 +353,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C06D5B2722251D7B0050878E /* SubscriptionWorkflow.swift in Sources */,
 				C05834392223E0140070674A /* SingleLike.swift in Sources */,
 				C058343A2223E0140070674A /* ReactorCore.swift in Sources */,
-				C058343B2223E0140070674A /* ReadonlyWorkflow.swift in Sources */,
 				C05834382223E0140070674A /* ReactionBuilder.swift in Sources */,
 				C058343D2223E0140070674A /* Reaction.swift in Sources */,
 				C058343C2223E0140070674A /* Workflow.swift in Sources */,
@@ -364,6 +367,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				C05834462223E0860070674A /* DeallocationTests.swift in Sources */,
+				C06D5B29222522880050878E /* SubscriptionWorkflowTests.swift in Sources */,
 				C05834482223E0860070674A /* SubworkflowTests.swift in Sources */,
 				C05834452223E0860070674A /* ValueQueueTests.swift in Sources */,
 				C05834492223E0860070674A /* RegisterTests.swift in Sources */,

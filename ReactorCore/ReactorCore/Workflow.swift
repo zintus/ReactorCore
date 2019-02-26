@@ -39,3 +39,5 @@ public extension WorkflowState where Result == Never {
         }
     }
 }
+
+extension WorkflowState: Equatable where State: Equatable, Result: Equatable {}
