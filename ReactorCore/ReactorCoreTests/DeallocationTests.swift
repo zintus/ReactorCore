@@ -26,8 +26,8 @@ class DeallocationTests: XCTestCase {
 
         _ = {
             let register = Register(initialState: .init(register: 0))
-            register.send(event: .inc)
             register.launch()
+            register.send(syncEvent: .inc)
             registerWeak = register
         }()
 

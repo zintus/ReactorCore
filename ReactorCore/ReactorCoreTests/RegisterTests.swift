@@ -65,7 +65,8 @@ class PeformanceTests: XCTestCase {
         measure {
             let register = Register(initialState: .init(register: 0))
 
-            DispatchQueue.global().async {
+            let events = DispatchGroup()
+            DispatchQueue.global().async(group: events) {
                 for _ in 1 ... Consts.count {
                     register.send(event: .inc)
                 }
@@ -73,25 +74,17 @@ class PeformanceTests: XCTestCase {
 
             register.launch()
 
-            DispatchQueue.global().async {
+            DispatchQueue.global().async(group: events) {
                 for _ in 1 ... 2 * Consts.count {
                     register.send(event: .dec)
                 }
             }
 
-            register.send(event: .dec)
+            events.wait()
 
-            let exp = expectation(description: "Process finished")
-            register.state.producer
-                .map { $0.unwrapped }
-                .filter { $0.register == -(Consts.count + 1) }
-                .take(first: 1)
-                .on(completed: {
-                    exp.fulfill()
-                })
-                .start()
+            register.send(syncEvent: .dec)
 
-            waitForExpectations(timeout: 20)
+            XCTAssert(register.unwrappedState.value.register == -(Consts.count + 1))
         }
     }
 
