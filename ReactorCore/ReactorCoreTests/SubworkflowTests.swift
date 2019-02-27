@@ -113,7 +113,8 @@ class SubworkflowTests: XCTestCase {
 
         let parent = Aggregator(children)
 
-        DispatchQueue.global().async {
+        let tasks = DispatchGroup()
+        DispatchQueue.global().async(group: tasks) {
             for _ in 1 ... Consts.count {
                 parent.send(event: .inc)
             }
@@ -121,11 +122,13 @@ class SubworkflowTests: XCTestCase {
 
         parent.launch()
 
-        DispatchQueue.global().async {
+        DispatchQueue.global().async(group: tasks) {
             for _ in 1 ... Consts.count {
                 children.randomElement()!.send(event: .inc)
             }
         }
+
+        tasks.wait()
 
         for child in children {
             child.send(syncEvent: .inc)
@@ -140,7 +143,8 @@ class SubworkflowTests: XCTestCase {
 
         let parent = ReactiveAggregator(children)
 
-        DispatchQueue.global().async {
+        let tasks = DispatchGroup()
+        DispatchQueue.global().async(group: tasks) {
             for _ in 1 ... Consts.count {
                 parent.send(event: .inc)
             }
@@ -148,11 +152,13 @@ class SubworkflowTests: XCTestCase {
 
         parent.launch()
 
-        DispatchQueue.global().async {
+        DispatchQueue.global().async(group: tasks) {
             for _ in 1 ... Consts.count {
                 children.randomElement()!.send(event: .inc)
             }
         }
+
+        tasks.wait()
 
         for child in children {
             child.send(syncEvent: .inc)
