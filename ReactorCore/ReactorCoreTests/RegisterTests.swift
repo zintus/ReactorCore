@@ -79,11 +79,11 @@ class PeformanceTests: XCTestCase {
                     register.send(event: .dec)
                 }
             }
-
+        
             events.wait()
-
+            
             register.send(syncEvent: .dec)
-
+            
             XCTAssert(register.unwrappedState.value.register == -(Consts.count + 1))
         }
     }
