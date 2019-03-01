@@ -28,7 +28,11 @@ class Aggregator: ReactorCore<Aggregator.Event, Aggregator.State, Never> {
 
     init(_ children: [Aggregator]) {
         let scheduler = QueueScheduler(name: "Aggregator.scheduler")
-        super.init(initialState: .init(counter: 0, children: children.map { WorkflowHandle($0, scheduler: scheduler) }), scheduler: scheduler)
+        super.init(initialState: .init(
+            counter: 0,
+            children: children.map { WorkflowHandle.makeAndLaunch($0, scheduler: scheduler) }
+        ),
+                   scheduler: scheduler)
     }
 
     override func react(to state: State) -> Reaction<Event, State, Never> {
@@ -77,7 +81,11 @@ class ReactiveAggregator: ReactorCore<ReactiveAggregator.Event, ReactiveAggregat
 
     init(_ children: [ReactiveAggregator]) {
         let scheduler = QueueScheduler(name: "Aggregator.scheduler")
-        super.init(initialState: .init(counter: 0, children: children.map { WorkflowHandle($0, scheduler: scheduler) }), scheduler: scheduler)
+        super.init(initialState: .init(
+            counter: 0,
+            children: children.map { WorkflowHandle.makeAndLaunch($0, scheduler: scheduler) }
+        ),
+                   scheduler: scheduler)
     }
 
     override func react(to state: State) -> Reaction<Event, State, Never> {

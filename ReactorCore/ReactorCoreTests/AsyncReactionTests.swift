@@ -25,7 +25,7 @@ private class FastAndSlow: ReactorCore<FastAndSlow.Event, FastAndSlow.State, Nev
     }
 
     override init(initialState: State, scheduler: QueueScheduler = QueueScheduler(name: "QueueScheduler.FastAndSlow")) {
-        otherSource = WorkflowHandle(Minimal(initialState: .init()), scheduler: scheduler)
+        otherSource = .makeAndLaunch(Minimal(initialState: .init()), scheduler: scheduler)
         super.init(initialState: initialState, scheduler: scheduler)
     }
 
