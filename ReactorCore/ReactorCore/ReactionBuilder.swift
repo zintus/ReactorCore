@@ -226,8 +226,6 @@ public class WorkflowHandle<W: Workflow> {
         let tracker = WorkflowStateTracker(workflow: workflow, scheduler: scheduler)
         stateTracker = tracker
         state = workflow.state.value
-
-        workflow.launch()
     }
 
     private init(workflow: W, stateTracker: WorkflowStateTracker<W>, state: W.CompleteState) {
@@ -248,6 +246,14 @@ public class WorkflowHandle<W: Workflow> {
 
     func withState(_ state: W.CompleteState) -> WorkflowHandle<W> {
         return WorkflowHandle(workflow: workflow, stateTracker: stateTracker, state: state)
+    }
+}
+
+public extension WorkflowHandle where W: WorkflowLauncher {
+    static func makeAndLaunch(_ workflow: W, scheduler: QueueScheduler) -> WorkflowHandle {
+        let handle = WorkflowHandle(workflow, scheduler: scheduler)
+        workflow.launch()
+        return handle
     }
 }
 

@@ -3,7 +3,7 @@ import Foundation
 import ReactiveSwift
 import Result
 
-public protocol Reactor: class, Workflow, SingleLike {
+public protocol Reactor: class, Workflow, WorkflowLauncher, SingleLike {
     func react(
         to state: State
     ) -> Reaction<Event, State, Value>
@@ -135,11 +135,5 @@ private extension StateTransition {
         case let .enterState(state): return .running(state)
         case let .finishWith(value): return .finished(value)
         }
-    }
-}
-
-extension Reactor where Value == Never {
-    public var unwrappedState: Property<State> {
-        return state.map { $0.unwrapped }
     }
 }

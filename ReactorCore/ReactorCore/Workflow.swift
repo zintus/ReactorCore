@@ -17,11 +17,13 @@ public protocol Workflow: WorkflowInput, Single {
     typealias CompleteState = WorkflowState<State, Value>
 
     var state: Property<WorkflowState<State, Value>> { get }
+}
 
+public protocol WorkflowLauncher {
     func launch()
 }
 
-extension Workflow where Value == Never {
+public extension Workflow where Value == Never {
     func onReady(_: @escaping (Value) -> Void) {
         // log error?
     }
@@ -37,6 +39,12 @@ public extension WorkflowState where Result == Never {
         switch self {
         case let .running(state): return state
         }
+    }
+}
+
+public extension Workflow where Value == Never {
+    var unwrappedState: Property<State> {
+        return state.map { $0.unwrapped }
     }
 }
 
