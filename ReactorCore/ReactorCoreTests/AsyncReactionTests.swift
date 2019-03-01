@@ -25,11 +25,11 @@ private class FastAndSlow: ReactorCore<FastAndSlow.Event, FastAndSlow.State, Nev
     }
 
     override init(initialState: State, scheduler: QueueScheduler = QueueScheduler(name: "QueueScheduler.FastAndSlow")) {
-        otherSource = .makeAndLaunch(Minimal(initialState: .init()), scheduler: scheduler)
+        otherSource = Minimal(initialState: .init()).handle(on: scheduler)
         super.init(initialState: initialState, scheduler: scheduler)
     }
 
-    private let otherSource: WorkflowHandle<Minimal>
+    private let otherSource: Minimal.Handle
 
     override func react(
         to state: State

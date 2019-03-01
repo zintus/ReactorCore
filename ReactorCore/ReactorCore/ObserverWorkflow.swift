@@ -4,11 +4,9 @@ import Result
 public typealias SubscriptionState<Value> = WorkflowState<Value, Value>
 
 public class ObserverWorkflow<T>: Workflow {
-    public typealias Event = Readonly
+    public typealias Event = Never
     public typealias State = T
     public typealias Value = Never
-
-    public enum Readonly {}
 
     private var producer: SignalProducer<T, NoError>?
 
@@ -18,7 +16,7 @@ public class ObserverWorkflow<T>: Workflow {
 
     public let state: Property<CompleteState>
 
-    public func send(event _: Readonly) {}
+    public func send(event _: Never) {}
 }
 
 public extension PropertyProtocol {

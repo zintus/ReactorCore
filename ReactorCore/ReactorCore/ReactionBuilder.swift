@@ -121,9 +121,9 @@ public class ReactionBuilder<Event, State, Value> {
         self.eventQueue = eventQueue
     }
 
-    public func workflowUpdatedFlatMap<W: Workflow>(
-        _ handle: WorkflowHandle<W>,
-        mapper: @escaping (WorkflowHandle<W>) -> SignalProducer<StateTransition<State, Value>?, NoError>
+    public func workflowUpdatedFlatMap<E2, S2, V2>(
+        _ handle: WorkflowHandle<E2, S2, V2>,
+        mapper: @escaping (WorkflowHandle<E2, S2, V2>) -> SignalProducer<StateTransition<State, Value>?, NoError>
     ) {
         guard awaitingNexts != nil else {
             // Someone already computed next state
@@ -189,11 +189,11 @@ public class ReactionBuilder<Event, State, Value> {
     }
 }
 
-private class WorkflowStateTracker<W: Workflow> {
+private class WorkflowStateTracker<Event, State, Value> {
     private let (lifetime, token) = Lifetime.make()
-    private let stateQueue: ValueQueue<W.CompleteState>
+    private let stateQueue: ValueQueue<WorkflowState<State, Value>>
 
-    init(workflow: W, scheduler: QueueScheduler) {
+    init(workflow: AnyWorkflow<Event, State, Value>, scheduler: QueueScheduler) {
         stateQueue = ValueQueue(scheduler)
 
         lifetime += workflow.state.signal
@@ -205,11 +205,11 @@ private class WorkflowStateTracker<W: Workflow> {
             .start()
     }
 
-    func firstState() -> ValueQueue<W.CompleteState>.NextValue {
+    func firstState() -> ValueQueue<WorkflowState<State, Value>>.NextValue {
         return stateQueue.dequeue()
     }
 
-    func unsafeState() -> W.CompleteState {
+    func unsafeState() -> WorkflowState<State, Value> {
         let next = firstState()
         let value = next.value!
         stateQueue.consume()
@@ -217,51 +217,50 @@ private class WorkflowStateTracker<W: Workflow> {
     }
 }
 
-public class WorkflowHandle<W: Workflow> {
-    private let workflow: W
-    private let stateTracker: WorkflowStateTracker<W>
+public class WorkflowHandle<Event, State, Value> {
+    private let workflow: AnyWorkflow<Event, State, Value>
+    private let stateTracker: WorkflowStateTracker<Event, State, Value>
 
-    public init(_ workflow: W, scheduler: QueueScheduler) {
-        self.workflow = workflow
-        let tracker = WorkflowStateTracker(workflow: workflow, scheduler: scheduler)
+    public init<W: Workflow>(_ workflow: W, scheduler: QueueScheduler)
+        where W.Event == Event, W.State == State, W.Value == Value
+    {
+        self.workflow = AnyWorkflow(workflow)
+        let tracker = WorkflowStateTracker(workflow: self.workflow, scheduler: scheduler)
         stateTracker = tracker
         state = workflow.state.value
     }
 
-    private init(workflow: W, stateTracker: WorkflowStateTracker<W>, state: W.CompleteState) {
+    private init(
+        workflow: AnyWorkflow<Event, State, Value>,
+        stateTracker: WorkflowStateTracker<Event, State, Value>,
+        state: WorkflowState<State, Value>
+    )
+    {
         self.workflow = workflow
         self.stateTracker = stateTracker
         self.state = state
     }
 
-    public let state: W.CompleteState
+    public let state: WorkflowState<State, Value>
 
-    public func send(event: W.Event) {
+    public func send(event: Event) {
         workflow.send(event: event)
     }
 
-    fileprivate func toNextState() -> ValueQueue<W.CompleteState>.NextValue {
+    fileprivate func toNextState() -> ValueQueue<WorkflowState<State, Value>>.NextValue {
         return stateTracker.firstState()
     }
 
-    func withState(_ state: W.CompleteState) -> WorkflowHandle<W> {
+    func withState(_ state: WorkflowState<State, Value>) -> WorkflowHandle<Event, State, Value> {
         return WorkflowHandle(workflow: workflow, stateTracker: stateTracker, state: state)
-    }
-}
-
-public extension WorkflowHandle where W: WorkflowLauncher {
-    static func makeAndLaunch(_ workflow: W, scheduler: QueueScheduler) -> WorkflowHandle {
-        let handle = WorkflowHandle(workflow, scheduler: scheduler)
-        workflow.launch()
-        return handle
     }
 }
 
 // WARN: Don't edit this, copy paste from above
 extension ReactionBuilder {
-    public func workflowUpdated<W: Workflow>(
-        _ handle: WorkflowHandle<W>,
-        mapper: @escaping (WorkflowHandle<W>) -> StateTransition<State, Value>?
+    public func workflowUpdated<E2, S2, V2>(
+        _ handle: WorkflowHandle<E2, S2, V2>,
+        mapper: @escaping (WorkflowHandle<E2, S2, V2>) -> StateTransition<State, Value>?
     ) {
         guard awaitingNexts != nil else {
             // Someone already computed next state

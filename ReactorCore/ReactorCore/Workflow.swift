@@ -14,6 +14,7 @@ public enum WorkflowState<State, Result> {
 
 public protocol Workflow: WorkflowInput, Single {
     associatedtype State
+    typealias Handle = WorkflowHandle<Event, State, Value>
     typealias CompleteState = WorkflowState<State, Value>
 
     var state: Property<WorkflowState<State, Value>> { get }
@@ -58,3 +59,19 @@ public extension WorkflowState {
 }
 
 extension WorkflowState: Equatable where State: Equatable, Result: Equatable {}
+
+// MARK: - Handler
+
+public extension Workflow {
+    func handle(on scheduler: QueueScheduler) -> WorkflowHandle<Event, State, Value> {
+        return WorkflowHandle(self, scheduler: scheduler)
+    }
+}
+
+public extension Workflow where Self: WorkflowLauncher {
+    func handle(on scheduler: QueueScheduler) -> WorkflowHandle<Event, State, Value> {
+        let handle = WorkflowHandle(self, scheduler: scheduler)
+        launch()
+        return handle
+    }
+}

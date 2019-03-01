@@ -11,7 +11,7 @@ class Aggregator: ReactorCore<Aggregator.Event, Aggregator.State, Never> {
     struct State {
         let counter: Int
 
-        let children: [WorkflowHandle<Aggregator>]
+        let children: [Aggregator.Handle]
 
         var total: Int {
             return counter + children.reduce(into: 0) { $0 = $0 + $1.state.unwrapped.counter }
@@ -21,7 +21,7 @@ class Aggregator: ReactorCore<Aggregator.Event, Aggregator.State, Never> {
             return State(counter: counter, children: children)
         }
 
-        func with(children: [WorkflowHandle<Aggregator>]) -> State {
+        func with(children: [Aggregator.Handle]) -> State {
             return State(counter: counter, children: children)
         }
     }
@@ -30,7 +30,8 @@ class Aggregator: ReactorCore<Aggregator.Event, Aggregator.State, Never> {
         let scheduler = QueueScheduler(name: "Aggregator.scheduler")
         super.init(initialState: .init(
             counter: 0,
-            children: children.map { WorkflowHandle.makeAndLaunch($0, scheduler: scheduler) }
+            children: children
+                .map { $0.handle(on: scheduler) }
         ),
                    scheduler: scheduler)
     }
@@ -64,7 +65,7 @@ class ReactiveAggregator: ReactorCore<ReactiveAggregator.Event, ReactiveAggregat
     struct State {
         let counter: Int
 
-        let children: [WorkflowHandle<ReactiveAggregator>]
+        let children: [ReactiveAggregator.Handle]
 
         var total: Int {
             return counter + children.reduce(into: 0) { $0 = $0 + $1.state.unwrapped.counter }
@@ -74,7 +75,7 @@ class ReactiveAggregator: ReactorCore<ReactiveAggregator.Event, ReactiveAggregat
             return State(counter: counter, children: children)
         }
 
-        func with(children: [WorkflowHandle<ReactiveAggregator>]) -> State {
+        func with(children: [ReactiveAggregator.Handle]) -> State {
             return State(counter: counter, children: children)
         }
     }
@@ -83,7 +84,8 @@ class ReactiveAggregator: ReactorCore<ReactiveAggregator.Event, ReactiveAggregat
         let scheduler = QueueScheduler(name: "Aggregator.scheduler")
         super.init(initialState: .init(
             counter: 0,
-            children: children.map { WorkflowHandle.makeAndLaunch($0, scheduler: scheduler) }
+            children: children
+                .map { $0.handle(on: scheduler) }
         ),
                    scheduler: scheduler)
     }
