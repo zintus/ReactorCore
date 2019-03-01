@@ -40,4 +40,13 @@ public extension WorkflowState where Result == Never {
     }
 }
 
+public extension WorkflowState {
+    var runningState: State? {
+        switch self {
+        case let .running(state): return state
+        default: return nil
+        }
+    }
+}
+
 extension WorkflowState: Equatable where State: Equatable, Result: Equatable {}
