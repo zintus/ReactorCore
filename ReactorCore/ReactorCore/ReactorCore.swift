@@ -16,16 +16,16 @@ public protocol Reactor: class, Workflow, WorkflowLauncher, SingleLike {
     ) -> Reaction<Event, State, Value>
 }
 
-open class ReactorCore<E, S, R>: Reactor {
-    public typealias Event = E
-    public typealias State = S
-    public typealias Value = R
+open class ReactorCore<T1, T2, T3>: Reactor {
+    public typealias Event = T1
+    public typealias State = T2
+    public typealias Value = T3
 
-    public init(initialState: S, scheduler: QueueScheduler = QueueScheduler(name: "ReactorCore.Scheduler")) {
+    public init(initialState: T2, scheduler: QueueScheduler = QueueScheduler(name: "ReactorCore.Scheduler")) {
         self.scheduler = scheduler
         mutableState = MutableProperty(CompleteState.running(initialState))
         state = Property(capturing: mutableState)
-        eventQueue = ValueQueue<(E, DispatchSemaphore?)>(scheduler)
+        eventQueue = ValueQueue<(T1, DispatchSemaphore?)>(scheduler)
     }
 
     private var launched: Bool = false
@@ -33,8 +33,8 @@ open class ReactorCore<E, S, R>: Reactor {
     public let state: Property<CompleteState>
 
     open func react(
-        to _: S
-    ) -> Reaction<E, S, R> {
+        to _: T2
+    ) -> Reaction<T1, T2, T3> {
         fatalError()
     }
 
@@ -53,20 +53,20 @@ open class ReactorCore<E, S, R>: Reactor {
         }
     }
 
-    private let eventQueue: ValueQueue<(E, DispatchSemaphore?)>
+    private let eventQueue: ValueQueue<(T1, DispatchSemaphore?)>
 
-    public func send(event: E) {
+    public func send(event: T1) {
         eventQueue.enqueue((event, nil))
     }
 
-    public func send(syncEvent event: E) {
+    public func send(syncEvent event: T1) {
         let semaphore = DispatchSemaphore(value: 0)
         eventQueue.enqueue((event, semaphore))
         semaphore.wait()
     }
 
-    private func buildState(_ initialState: State) -> Property<WorkflowState<S, R>> {
-        typealias CompleteState = WorkflowState<S, R>
+    private func buildState(_ initialState: State) -> Property<WorkflowState<T2, T3>> {
+        typealias CompleteState = WorkflowState<T2, T3>
 
         let continueStateStream = { [weak self] (_ prev: CompleteState) -> SignalProducer<CompleteState, NoError> in
             guard let self = self else { return .empty }
