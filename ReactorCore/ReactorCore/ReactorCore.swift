@@ -144,3 +144,17 @@ private extension StateTransition {
         }
     }
 }
+
+extension SignalProducer where Error == NoError {
+    static func enterState<State, FullState>(
+        _ state: State
+    ) -> SignalProducer<StateTransition<State, FullState>, Error> {
+        return SignalProducer<StateTransition<State, FullState>, Error>(value: .enterState(state))
+    }
+
+    static func finishWith<State, FullState>(
+        _ state: FullState
+    ) -> SignalProducer<StateTransition<State, FullState>, Error> {
+        return SignalProducer<StateTransition<State, FullState>, Error>(value: .finishWith(state))
+    }
+}
