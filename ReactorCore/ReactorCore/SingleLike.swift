@@ -4,15 +4,15 @@ import Result
 
 public protocol SingleLike {
     associatedtype State
-    associatedtype Value
-    var state: Property<WorkflowState<State, Value>> { get }
+    associatedtype Result
+    var state: Property<WorkflowState<State, Result>> { get }
 }
 
 extension SingleLike {
-    public func onReady(_ continuation: @escaping (Value) -> Void) {
+    public func onReady(_ continuation: @escaping (Result) -> Void) {
         state
             .producer
-            .flatMap(.concat) { state -> SignalProducer<Value, NoError> in
+            .flatMap(.concat) { state -> SignalProducer<Result, NoError> in
                 switch state {
                 case let .finished(result): return SignalProducer(value: result)
                 case .running: return .empty

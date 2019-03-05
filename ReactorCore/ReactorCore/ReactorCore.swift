@@ -6,22 +6,24 @@ import Result
 public protocol Reactor: class, Workflow, WorkflowLauncher, SingleLike {
     func react(
         to state: State
-    ) -> Reaction<Event, State, Value>
+    ) -> Reaction<Event, State, FinalState>
 
     func buildReaction(
-        _ builderBlock: (ReactionBuilder<Event, State, Value>) -> Void
-    ) -> Reaction<Event, State, Value>
+        _ builderBlock: (ReactionBuilder<Event, State, FinalState>) -> Void
+    ) -> Reaction<Event, State, FinalState>
     func buildEventReaction(
-        _ mapper: @escaping (Event) -> StateTransition<State, Value>?
-    ) -> Reaction<Event, State, Value>
+        _ mapper: @escaping (Event) -> StateTransition<State, FinalState>?
+    ) -> Reaction<Event, State, FinalState>
 }
 
 open class ReactorCore<T1, T2, T3>: Reactor {
     public typealias Event = T1
     public typealias State = T2
-    public typealias Value = T3
+    public typealias FinalState = T3
+    public typealias StateTransitionProducer = SignalProducer<StateTransition<T2, T3>, NoError>
 
     public init(initialState: T2, scheduler: QueueScheduler = QueueScheduler(name: "ReactorCore.Scheduler")) {
+        (lifetime, token) = Lifetime.make()
         self.scheduler = scheduler
         mutableState = MutableProperty(CompleteState.running(initialState))
         state = Property(capturing: mutableState)
@@ -114,23 +116,28 @@ open class ReactorCore<T1, T2, T3>: Reactor {
     public let scheduler: QueueScheduler
 
     public func buildReaction(
-        _ builderBlock: (ReactionBuilder<Event, State, Value>) -> Void
-    ) -> Reaction<Event, State, Value> {
+        _ builderBlock: (ReactionBuilder<Event, State, FinalState>) -> Void
+    ) -> Reaction<Event, State, FinalState> {
         return Reaction(scheduler: scheduler, eventQueue: eventQueue, builderBlock)
     }
 
     public func buildEventReaction(
-        _ mapper: @escaping (Event) -> StateTransition<State, Value>?
-    ) -> Reaction<Event, State, Value> {
+        _ mapper: @escaping (Event) -> StateTransition<State, FinalState>?
+    ) -> Reaction<Event, State, FinalState> {
         return Reaction(scheduler: scheduler, eventQueue: eventQueue) { when in
             when.received(mapper)
         }
     }
+
+    // MARK: - Lifetime
+
+    public let lifetime: Lifetime
+    private let token: Lifetime.Token
 }
 
 // Only purpose of this is sugar
 private extension StateTransition {
-    var nextState: WorkflowState<State, Value> {
+    var nextState: WorkflowState<State, FinalState> {
         switch self {
         case let .enterState(state): return .running(state)
         case let .finishWith(value): return .finished(value)

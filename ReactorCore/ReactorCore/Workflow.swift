@@ -3,29 +3,29 @@ import ReactiveSwift
 import Result
 
 public protocol Single {
-    associatedtype Value
-    func onReady(_ subscriber: @escaping (Value) -> Void)
+    associatedtype FinalState
+    func onReady(_ subscriber: @escaping (FinalState) -> Void)
 }
 
-public enum WorkflowState<State, Result> {
+public enum WorkflowState<State, FinalState> {
     case running(State)
-    case finished(Result)
+    case finished(FinalState)
 }
 
 public protocol Workflow: WorkflowInput, Single {
     associatedtype State
-    typealias Handle = WorkflowHandle<Event, State, Value>
-    typealias CompleteState = WorkflowState<State, Value>
+    typealias Handle = WorkflowHandle<Event, State, FinalState>
+    typealias CompleteState = WorkflowState<State, FinalState>
 
-    var state: Property<WorkflowState<State, Value>> { get }
+    var state: Property<WorkflowState<State, FinalState>> { get }
 }
 
 public protocol WorkflowLauncher {
     func launch()
 }
 
-public extension Workflow where Value == Never {
-    func onReady(_: @escaping (Value) -> Void) {
+public extension Workflow where FinalState == Never {
+    func onReady(_: @escaping (FinalState) -> Void) {
         // log error?
     }
 }
@@ -35,7 +35,7 @@ public protocol WorkflowInput {
     func send(event: Event)
 }
 
-public extension WorkflowState where Result == Never {
+public extension WorkflowState where FinalState == Never {
     var unwrapped: State {
         switch self {
         case let .running(state): return state
@@ -43,7 +43,7 @@ public extension WorkflowState where Result == Never {
     }
 }
 
-public extension Workflow where Value == Never {
+public extension Workflow where FinalState == Never {
     var unwrappedState: Property<State> {
         return state.map { $0.unwrapped }
     }
@@ -58,18 +58,18 @@ public extension WorkflowState {
     }
 }
 
-extension WorkflowState: Equatable where State: Equatable, Result: Equatable {}
+extension WorkflowState: Equatable where State: Equatable, FinalState: Equatable {}
 
 // MARK: - Handler
 
 public extension Workflow {
-    func handle(on scheduler: QueueScheduler) -> WorkflowHandle<Event, State, Value> {
+    func handle(on scheduler: QueueScheduler) -> WorkflowHandle<Event, State, FinalState> {
         return WorkflowHandle(self, scheduler: scheduler)
     }
 }
 
 public extension Workflow where Self: WorkflowLauncher {
-    func handle(on scheduler: QueueScheduler) -> WorkflowHandle<Event, State, Value> {
+    func handle(on scheduler: QueueScheduler) -> WorkflowHandle<Event, State, FinalState> {
         let handle = WorkflowHandle(self, scheduler: scheduler)
         launch()
         return handle

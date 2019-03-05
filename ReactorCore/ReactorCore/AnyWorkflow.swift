@@ -4,12 +4,12 @@ import ReactiveSwift
 class AnyWorkflow<E, S, V>: Workflow {
     typealias Event = E
     typealias State = S
-    typealias Value = V
+    typealias FinalState = V
 
     init<W: Workflow>(_ workflow: W) where
         W.Event == Event,
         W.State == State,
-        W.Value == Value
+        W.FinalState == FinalState
     {
         state = workflow.state
 

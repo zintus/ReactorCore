@@ -123,7 +123,7 @@ public class ReactionBuilder<Event, State, Value> {
 
     public func workflowUpdatedFlatMap<E2, S2, V2>(
         _ handle: WorkflowHandle<E2, S2, V2>,
-        mapper: @escaping (WorkflowHandle<E2, S2, V2>) -> SignalProducer<StateTransition<State, Value>?, NoError>
+        mapper: @escaping (WorkflowHandle<E2, S2, V2>) -> SignalProducer<StateTransition<State, Value>, NoError>
     ) {
         guard awaitingNexts != nil else {
             // Someone already computed next state
@@ -140,9 +140,6 @@ public class ReactionBuilder<Event, State, Value> {
                 .take(first: 1)
                 .observe(on: self.scheduler)
                 .on { [weak self] transition in
-                    guard let transition = transition else {
-                        fatalError("Unhandled state transition")
-                    }
                     guard let self = self else { return }
 
                     self.futureState.value = (transition, nil)
@@ -156,7 +153,7 @@ public class ReactionBuilder<Event, State, Value> {
         awaitingNexts = nexts + [nextState]
     }
 
-    public func receivedFlatMap(_ mapper: @escaping (Event) -> SignalProducer<StateTransition<State, Value>?, NoError>) {
+    public func receivedFlatMap(_ mapper: @escaping (Event) -> SignalProducer<StateTransition<State, Value>, NoError>) {
         guard awaitingNexts != nil else {
             // Someone already computed next state
             return
@@ -171,10 +168,6 @@ public class ReactionBuilder<Event, State, Value> {
                 .take(first: 1)
                 .observe(on: self.scheduler)
                 .on { [weak self] transition in
-                    guard let transition = transition else {
-                        fatalError("Unhandled state transition")
-                    }
-
                     guard let self = self else { return }
 
                     self.futureState.value = (transition, newState.1)
@@ -222,7 +215,7 @@ public class WorkflowHandle<Event, State, Value> {
     private let stateTracker: WorkflowStateTracker<Event, State, Value>
 
     public init<W: Workflow>(_ workflow: W, scheduler: QueueScheduler)
-        where W.Event == Event, W.State == State, W.Value == Value
+        where W.Event == Event, W.State == State, W.FinalState == Value
     {
         self.workflow = AnyWorkflow(workflow)
         let tracker = WorkflowStateTracker(workflow: self.workflow, scheduler: scheduler)

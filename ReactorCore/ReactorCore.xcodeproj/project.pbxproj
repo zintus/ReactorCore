@@ -23,6 +23,7 @@
 		C05834492223E0860070674A /* RegisterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C05834442223E0860070674A /* RegisterTests.swift */; };
 		C06D5B2722251D7B0050878E /* ObserverWorkflow.swift in Sources */ = {isa = PBXBuildFile; fileRef = C06D5B2622251D7B0050878E /* ObserverWorkflow.swift */; };
 		C06D5B29222522880050878E /* ObserverWorkflowTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C06D5B28222522880050878E /* ObserverWorkflowTests.swift */; };
+		C0E227E8222E594F0078710C /* ReactorCore+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0E227E7222E594F0078710C /* ReactorCore+Extensions.swift */; };
 		D62AAF670022F83967A14147 /* AnyWorkflow.swift in Sources */ = {isa = PBXBuildFile; fileRef = D62AA213BB661BEC4F240A35 /* AnyWorkflow.swift */; };
 		E096E98A144A0C3F85E9D02D /* Pods_ReactorCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3B6518276610943D903C9CB4 /* Pods_ReactorCore.framework */; };
 /* End PBXBuildFile section */
@@ -62,6 +63,7 @@
 		C058344B2223E1270070674A /* Pods_Workflows.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = Pods_Workflows.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		C06D5B2622251D7B0050878E /* ObserverWorkflow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ObserverWorkflow.swift; sourceTree = "<group>"; };
 		C06D5B28222522880050878E /* ObserverWorkflowTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ObserverWorkflowTests.swift; sourceTree = "<group>"; };
+		C0E227E7222E594F0078710C /* ReactorCore+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "ReactorCore+Extensions.swift"; sourceTree = "<group>"; };
 		D62AA213BB661BEC4F240A35 /* AnyWorkflow.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AnyWorkflow.swift; sourceTree = "<group>"; };
 		F893E602F21828121C38A3E7 /* Pods_ReactorCoreTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_ReactorCoreTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -121,6 +123,7 @@
 		C05834192223DF340070674A /* ReactorCore */ = {
 			isa = PBXGroup;
 			children = (
+				C0E227E7222E594F0078710C /* ReactorCore+Extensions.swift */,
 				C058341A2223DF340070674A /* ReactorCore.h */,
 				C058341B2223DF340070674A /* Info.plist */,
 				C05834362223E0140070674A /* Workflow.swift */,
@@ -362,6 +365,7 @@
 				C06D5B2722251D7B0050878E /* ObserverWorkflow.swift in Sources */,
 				C05834392223E0140070674A /* SingleLike.swift in Sources */,
 				C058343A2223E0140070674A /* ReactorCore.swift in Sources */,
+				C0E227E8222E594F0078710C /* ReactorCore+Extensions.swift in Sources */,
 				C05834382223E0140070674A /* ReactionBuilder.swift in Sources */,
 				C058343D2223E0140070674A /* Reaction.swift in Sources */,
 				C058343C2223E0140070674A /* Workflow.swift in Sources */,

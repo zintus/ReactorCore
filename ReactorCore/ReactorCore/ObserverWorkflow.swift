@@ -6,7 +6,7 @@ public typealias SubscriptionState<Value> = WorkflowState<Value, Value>
 public class ObserverWorkflow<T>: Workflow {
     public typealias Event = Never
     public typealias State = T
-    public typealias Value = Never
+    public typealias FinalState = Never
 
     private var producer: SignalProducer<T, NoError>?
 
